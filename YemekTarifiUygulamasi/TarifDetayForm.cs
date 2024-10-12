@@ -11,13 +11,13 @@ namespace YemekTarifiUygulamasi
         public TarifDetayForm(long tarifId)
         {
             InitializeComponent();
-            this.tarifId = tarifId;
-            LoadTarifDetails();
+            this.tarifId = tarifId; // Parametre olarak gelen tarifId'yi sakla
+            LoadTarifDetails(); // Detayları yükle
         }
 
         private void LoadTarifDetails()
         {
-            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;"; // Veritabanı bağlantı dizesi
+            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
@@ -29,9 +29,9 @@ namespace YemekTarifiUygulamasi
                 {
                     if (reader.Read())
                     {
-                        lblTarifAdi.Text = reader.GetString("TarifAdi");
-                        txtTalimatlar.Text = reader.GetString("Talimatlar");
-                        pictureBoxTarif.ImageLocation = reader.GetString("GorselYolu");
+                        lblTarifAdi.Text = reader.GetString("TarifAdi"); // Tarif adını ekle
+                        txtTalimatlar.Text = reader.GetString("Talimatlar"); // Talimatları ekle
+                        pictureBoxTarif.ImageLocation = reader.GetString("GorselYolu"); // Resmi göster
                     }
                 }
             }

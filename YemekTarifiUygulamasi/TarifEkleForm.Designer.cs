@@ -106,7 +106,7 @@
             btnEkle.Name = "btnEkle";
             btnEkle.Size = new Size(94, 29);
             btnEkle.TabIndex = 7;
-            btnEkle.Text = "btnEkle";
+            btnEkle.Text = "Ekle";
             btnEkle.UseVisualStyleBackColor = true;
             btnEkle.Click += btnEkle_Click;
             // 
@@ -120,19 +120,19 @@
             // 
             // pbGorsel
             // 
-            pbGorsel.Location = new Point(446, 127);
+            pbGorsel.Location = new Point(387, 12);
             pbGorsel.Name = "pbGorsel";
-            pbGorsel.Size = new Size(125, 62);
+            pbGorsel.Size = new Size(285, 263);
             pbGorsel.TabIndex = 9;
             pbGorsel.TabStop = false;
             // 
             // btnResimSec
             // 
-            btnResimSec.Location = new Point(445, 291);
+            btnResimSec.Location = new Point(489, 294);
             btnResimSec.Name = "btnResimSec";
             btnResimSec.Size = new Size(94, 29);
             btnResimSec.TabIndex = 10;
-            btnResimSec.Text = "button1";
+            btnResimSec.Text = "resim ekle";
             btnResimSec.UseVisualStyleBackColor = true;
             btnResimSec.Click += btnResimSec_Click_1;
             // 

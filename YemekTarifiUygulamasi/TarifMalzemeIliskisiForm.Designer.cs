@@ -35,6 +35,7 @@
             dataGridViewMalzemeler = new DataGridView();
             label1 = new Label();
             label2 = new Label();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewMalzemeler).BeginInit();
             SuspendLayout();
             // 
@@ -100,11 +101,21 @@
             label2.TabIndex = 6;
             label2.Text = "Miktar";
             // 
+            // button1
+            // 
+            button1.Location = new Point(456, 144);
+            button1.Name = "button1";
+            button1.Size = new Size(94, 29);
+            button1.TabIndex = 7;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
+            // 
             // TarifMalzemeIliskisiForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(button1);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(dataGridViewMalzemeler);
@@ -129,5 +140,6 @@
         private DataGridView dataGridViewMalzemeler;
         private Label label1;
         private Label label2;
+        private Button button1;
     }
 }

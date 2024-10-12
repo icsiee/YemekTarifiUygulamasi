@@ -41,7 +41,6 @@ namespace YemekTarifiUygulamasi
             selectedImagePath = string.Empty; // Seçilen görsel yolunu temizle
         }
 
-     
 
         private void btnEkle_Click(object sender, EventArgs e)
         {

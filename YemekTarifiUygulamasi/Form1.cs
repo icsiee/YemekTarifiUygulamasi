@@ -1,20 +1,43 @@
 using System;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;  // MySQL için ADO.NET kütüphanesi
+using MySql.Data.MySqlClient; // MySQL için ADO.NET kütüphanesi
 
 namespace YemekTarifiUygulamasi
 {
     public partial class Form1 : Form
     {
-        private FlowLayoutPanel flowLayoutPanelTarifler; // Tariflerin listelendiði dinamik panel
-
         public Form1()
         {
             InitializeComponent(); // Formu ve kontrolleri baþlat
-            LoadTarifler(); // Form yüklendiðinde tarifleri yükle
-           // btnTarifEkle.Click += new EventHandler(btnTarifEkle_Click); // Olay iþleyicilerini ekle
-            //btnMalzemeEkle.Click += new EventHandler(malzeme_Click_1); // Olay iþleyicilerini ekle
+
+            // DataGridView'e sütun ekle
+            dataGridViewTarifler.Columns.Clear(); // Önceki sütunlarý temizle
+
+            // Gorsel sütunu (Image türü için)
+            DataGridViewImageColumn imageColumn = new DataGridViewImageColumn();
+            imageColumn.Name = "Gorsel";
+            imageColumn.HeaderText = "Görsel";
+            dataGridViewTarifler.Columns.Add(imageColumn);
+
+            // TarifID sütununu ekle
+            DataGridViewTextBoxColumn tarifIdColumn = new DataGridViewTextBoxColumn();
+            tarifIdColumn.Name = "TarifID"; // Bu ismi kullanmalýsýnýz
+            tarifIdColumn.HeaderText = "Tarif ID";
+            tarifIdColumn.Visible = false; // Görünmez yapabilirsiniz
+            dataGridViewTarifler.Columns.Add(tarifIdColumn);
+
+            // Diðer sütunlarý ekle
+            dataGridViewTarifler.Columns.Add("TarifAdi", "Tarif Adý");
+            dataGridViewTarifler.Columns.Add("HazirlamaSuresi", "Hazýrlama Süresi (dk)");
+            dataGridViewTarifler.Columns.Add("ToplamMaliyet", "Toplam Maliyet");
+
+            // Diðer ayarlar (isteðe baðlý)
+            dataGridViewTarifler.AllowUserToAddRows = false; // Kullanýcýnýn yeni satýr eklemesine izin verme
+
+            // Form yüklendiðinde tarifleri yükle
+            LoadTarifler();
         }
 
         private void LoadTarifler()
@@ -25,7 +48,22 @@ namespace YemekTarifiUygulamasi
                 try
                 {
                     connection.Open();
-                    string query = "SELECT TarifID, TarifAdi, GorselYolu FROM tarifler";
+                    string query = @"
+                        SELECT 
+                            t.TarifID, 
+                            t.TarifAdi, 
+                            t.HazirlamaSuresi, 
+                            SUM(m.BirimFiyat * tm.Malzememiktar) AS ToplamMaliyet, 
+                            t.GorselYolu 
+                        FROM 
+                            tarifler t
+                        LEFT JOIN 
+                            tarifmalzemeiliskisi tm ON t.TarifID = tm.TarifID
+                        LEFT JOIN 
+                            malzemeler m ON tm.MalzemeID = m.MalzemeID
+                        GROUP BY 
+                            t.TarifID, t.TarifAdi, t.HazirlamaSuresi, t.GorselYolu";
+
                     MySqlCommand command = new MySqlCommand(query, connection);
 
                     using (MySqlDataReader reader = command.ExecuteReader())
@@ -34,10 +72,26 @@ namespace YemekTarifiUygulamasi
                         {
                             long tarifId = reader.GetInt64("TarifID");
                             string tarifAdi = reader.GetString("TarifAdi");
+                            int hazirlamaSuresi = reader.GetInt32("HazirlamaSuresi");
+                            decimal maliyet = reader.IsDBNull("ToplamMaliyet") ? 0 : reader.GetDecimal("ToplamMaliyet");
                             string gorselYolu = reader.GetString("GorselYolu");
 
-                            // Tarif kartýný oluþtur
-                            CreateTarifCard(tarifId, tarifAdi, gorselYolu);
+                            // Resmi yükle, eðer yol geçersizse null olacak
+                            Image tarifImage = null;
+                            if (!string.IsNullOrEmpty(gorselYolu) && System.IO.File.Exists(gorselYolu))
+                            {
+                                try
+                                {
+                                    tarifImage = Image.FromFile(gorselYolu);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine("Resim yüklenemedi: " + ex.Message);
+                                }
+                            }
+
+                            // Verileri DataGridView'e ekle
+                            dataGridViewTarifler.Rows.Add(tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
                         }
                     }
                 }
@@ -52,64 +106,33 @@ namespace YemekTarifiUygulamasi
             }
         }
 
-        private void CreateTarifCard(long tarifId, string tarifAdi, string gorselYolu)
+        // DataGridView satýrýna týklayýnca detaylarý göster
+        private void dataGridViewTarifler_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Tarif için yeni bir panel oluþtur
-            Panel tarifPanel = new Panel
+            if (e.RowIndex >= 0) // Geçerli bir satýr seçildi mi kontrol et
             {
-                Size = new Size(200, 250),
-                Margin = new Padding(10),
-                BorderStyle = BorderStyle.FixedSingle,
-                Tag = tarifId // Tarif ID'sini panellerin Tag'ine ekle
-            };
-
-            // Resmi yükle
-            PictureBox pictureBox = new PictureBox
-            {
-                Size = new Size(200, 150),
-                ImageLocation = gorselYolu, // Resim yolunu kullan
-                SizeMode = PictureBoxSizeMode.StretchImage // Resmi panel boyutuna uydur
-            };
-
-            // Tarif adý etiketi
-            Label label = new Label
-            {
-                Text = tarifAdi,
-                TextAlign = ContentAlignment.MiddleCenter,
-                Dock = DockStyle.Bottom
-            };
-
-            // Etiket ve resmi panele ekle
-            tarifPanel.Controls.Add(pictureBox);
-            tarifPanel.Controls.Add(label);
-
-            // Panel týklandýðýnda yapýlacak iþlemleri tanýmla
-            tarifPanel.Click += (s, e) =>
-            {
-                ShowTarifDetails(tarifId);
-            };
-
-            // Paneli FlowLayoutPanel'e ekle
-            flowLayoutPanelTarifler.Controls.Add(tarifPanel);
+                // Seçilen satýrdaki Tarif ID'sini al
+                long tarifId = Convert.ToInt64(dataGridViewTarifler.Rows[e.RowIndex].Cells["TarifID"].Value);
+                ShowTarifDetails(tarifId); // Tarif detaylarýný göster
+            }
         }
 
         private void ShowTarifDetails(long tarifId)
         {
-            // Tarif detaylarýný gösteren bir form aç
             TarifDetayForm detayForm = new TarifDetayForm(tarifId);
-            detayForm.ShowDialog(); // Detay formunu modal olarak aç
+            detayForm.ShowDialog(); // Modal olarak detay formunu aç
+        }
+
+        private void btnMalzemeEkle_Click_1(object sender, EventArgs e)
+        {
+            MalzemeEkleForm malzemeEkleForm = new MalzemeEkleForm();
+            malzemeEkleForm.ShowDialog(); // Formu modal olarak aç
         }
 
         private void btnTarifEkle_Click(object sender, EventArgs e)
         {
             TarifEkleForm tarifEkleForm = new TarifEkleForm();
             tarifEkleForm.ShowDialog(); // Formu modal olarak aç
-        }
-
-        private void malzeme_Click_1(object sender, EventArgs e)
-        {
-            MalzemeEkleForm malzemeEkleForm = new MalzemeEkleForm();
-            malzemeEkleForm.ShowDialog(); // Formu modal olarak aç
         }
     }
 }

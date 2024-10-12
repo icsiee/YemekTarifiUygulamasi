@@ -13,13 +13,13 @@ namespace YemekTarifiUygulamasi
         {
             InitializeComponent(); // Formu ve kontrolleri baþlat
             LoadTarifler(); // Form yüklendiðinde tarifleri yükle
-           // btnTarifEkle.Click += new EventHandler(btnTarifEkle_Click); // Olay iþleyicilerini ekle
-            //btnMalzemeEkle.Click += new EventHandler(malzeme_Click_1); // Olay iþleyicilerini ekle
+                            // btnTarifEkle.Click += new EventHandler(btnTarifEkle_Click); // Olay iþleyicilerini ekle
+                            //btnMalzemeEkle.Click += new EventHandler(malzeme_Click_1); // Olay iþleyicilerini ekle
         }
 
         private void LoadTarifler()
         {
-            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
+            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@;";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 try
@@ -100,16 +100,19 @@ namespace YemekTarifiUygulamasi
             detayForm.ShowDialog(); // Detay formunu modal olarak aç
         }
 
-        private void btnTarifEkle_Click(object sender, EventArgs e)
-        {
-            TarifEkleForm tarifEkleForm = new TarifEkleForm();
-            tarifEkleForm.ShowDialog(); // Formu modal olarak aç
-        }
+        
 
-        private void malzeme_Click_1(object sender, EventArgs e)
+
+        private void btnMalzemeEkle_Click(object sender, EventArgs e)
         {
             MalzemeEkleForm malzemeEkleForm = new MalzemeEkleForm();
             malzemeEkleForm.ShowDialog(); // Formu modal olarak aç
+        }
+
+        private void btnTarifEkle_Click_1(object sender, EventArgs e)
+        {
+            TarifEkleForm tarifEkleForm = new TarifEkleForm();
+            tarifEkleForm.ShowDialog(); // Formu modal olarak aç
         }
     }
 }

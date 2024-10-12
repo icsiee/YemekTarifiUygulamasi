@@ -17,7 +17,7 @@ namespace YemekTarifiUygulamasi
 
         private void LoadTarifDetails()
         {
-            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;"; // Veritabanı bağlantı dizesi
+            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@;"; // Veritabanı bağlantı dizesi
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();

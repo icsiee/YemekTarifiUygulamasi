@@ -52,6 +52,7 @@
             btnMalzemeEkle.TabIndex = 0;
             btnMalzemeEkle.Text = "malzeme ekle";
             btnMalzemeEkle.UseVisualStyleBackColor = true;
+            btnMalzemeEkle.Click += btnMalzemeEkle_Click;
             // 
             // btnTarifEkle
             // 
@@ -61,6 +62,7 @@
             btnTarifEkle.TabIndex = 1;
             btnTarifEkle.Text = "tarif ekle";
             btnTarifEkle.UseVisualStyleBackColor = true;
+            btnTarifEkle.Click += btnTarifEkle_Click_1;
             // 
             // Form1
             // 

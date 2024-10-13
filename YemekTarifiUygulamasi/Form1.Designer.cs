@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             flowLayoutPanelTarifler = new FlowLayoutPanel();
             btnMalzemeEkle = new Button();
             btnTarifEkle = new Button();
@@ -36,12 +37,14 @@
             // 
             // flowLayoutPanelTarifler
             // 
+            flowLayoutPanelTarifler.BackgroundImage = (Image)resources.GetObject("flowLayoutPanelTarifler.BackgroundImage");
+            flowLayoutPanelTarifler.BackgroundImageLayout = ImageLayout.Stretch;
             flowLayoutPanelTarifler.Controls.Add(btnMalzemeEkle);
             flowLayoutPanelTarifler.Controls.Add(btnTarifEkle);
             flowLayoutPanelTarifler.Location = new Point(12, 15);
             flowLayoutPanelTarifler.Margin = new Padding(3, 4, 3, 4);
             flowLayoutPanelTarifler.Name = "flowLayoutPanelTarifler";
-            flowLayoutPanelTarifler.Size = new Size(776, 532);
+            flowLayoutPanelTarifler.Size = new Size(1206, 746);
             flowLayoutPanelTarifler.TabIndex = 0;
             // 
             // btnMalzemeEkle

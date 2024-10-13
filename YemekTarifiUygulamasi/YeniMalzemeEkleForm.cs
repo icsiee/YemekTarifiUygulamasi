@@ -98,5 +98,7 @@ namespace YemekTarifiUygulamasi
             this.Close();
 
         }
+
+       
     }
 }

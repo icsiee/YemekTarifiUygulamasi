@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TarifEkleForm));
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
@@ -40,95 +41,107 @@
             pbGorsel = new PictureBox();
             btnResimSec = new Button();
             ofdResimSec = new OpenFileDialog();
+            label5 = new Label();
             ((System.ComponentModel.ISupportInitialize)pbGorsel).BeginInit();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(43, 81);
+            label1.BackColor = Color.PeachPuff;
+            label1.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label1.Location = new Point(100, 90);
             label1.Name = "label1";
-            label1.Size = new Size(64, 20);
+            label1.Size = new Size(115, 29);
             label1.TabIndex = 0;
-            label1.Text = "Tarif Adı";
+            label1.Text = "Tarif Adı:";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(42, 135);
+            label2.BackColor = Color.PeachPuff;
+            label2.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label2.Location = new Point(100, 135);
             label2.Name = "label2";
-            label2.Size = new Size(66, 20);
+            label2.Size = new Size(113, 29);
             label2.TabIndex = 1;
-            label2.Text = "Kategori";
+            label2.Text = "Kategori:";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(40, 197);
+            label3.BackColor = Color.PeachPuff;
+            label3.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label3.Location = new Point(100, 180);
             label3.Name = "label3";
-            label3.Size = new Size(161, 20);
+            label3.Size = new Size(277, 29);
             label3.TabIndex = 2;
-            label3.Text = "Hazırlama Süresi (saat)";
+            label3.Text = "Hazırlama Süresi (saat):";
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(47, 255);
+            label4.BackColor = Color.PeachPuff;
+            label4.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label4.Location = new Point(100, 224);
             label4.Name = "label4";
-            label4.Size = new Size(74, 20);
+            label4.Size = new Size(134, 29);
             label4.TabIndex = 3;
-            label4.Text = "Talimatlar";
+            label4.Text = "Talimatlar:";
             // 
             // txtTarifAdi
             // 
-            txtTarifAdi.Location = new Point(171, 90);
+            txtTarifAdi.Location = new Point(386, 90);
             txtTarifAdi.Name = "txtTarifAdi";
             txtTarifAdi.Size = new Size(125, 27);
             txtTarifAdi.TabIndex = 4;
             // 
             // txtHazirlamaSuresi
             // 
-            txtHazirlamaSuresi.Location = new Point(222, 194);
+            txtHazirlamaSuresi.Location = new Point(386, 180);
             txtHazirlamaSuresi.Name = "txtHazirlamaSuresi";
             txtHazirlamaSuresi.Size = new Size(125, 27);
             txtHazirlamaSuresi.TabIndex = 5;
             // 
             // txtTalimatlar
             // 
-            txtTalimatlar.Location = new Point(172, 255);
+            txtTalimatlar.Location = new Point(386, 224);
             txtTalimatlar.Name = "txtTalimatlar";
             txtTalimatlar.Size = new Size(125, 27);
             txtTalimatlar.TabIndex = 6;
             // 
             // btnEkle
             // 
-            btnEkle.Location = new Point(135, 329);
+            btnEkle.BackColor = Color.Red;
+            btnEkle.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnEkle.Location = new Point(123, 316);
             btnEkle.Name = "btnEkle";
-            btnEkle.Size = new Size(94, 29);
+            btnEkle.Size = new Size(160, 52);
             btnEkle.TabIndex = 7;
-            btnEkle.Text = "btnEkle";
-            btnEkle.UseVisualStyleBackColor = true;
+            btnEkle.Text = "KAYDET";
+            btnEkle.UseVisualStyleBackColor = false;
             btnEkle.Click += btnEkle_Click;
             // 
             // cmbKategori
             // 
             cmbKategori.FormattingEnabled = true;
-            cmbKategori.Location = new Point(177, 139);
+            cmbKategori.Location = new Point(386, 139);
             cmbKategori.Name = "cmbKategori";
-            cmbKategori.Size = new Size(151, 28);
+            cmbKategori.Size = new Size(125, 28);
             cmbKategori.TabIndex = 8;
             // 
             // pbGorsel
             // 
-            pbGorsel.Location = new Point(446, 127);
+            pbGorsel.BackgroundImageLayout = ImageLayout.Center;
+            pbGorsel.Location = new Point(325, 269);
             pbGorsel.Name = "pbGorsel";
-            pbGorsel.Size = new Size(125, 62);
+            pbGorsel.Size = new Size(148, 134);
             pbGorsel.TabIndex = 9;
             pbGorsel.TabStop = false;
             // 
             // btnResimSec
             // 
-            btnResimSec.Location = new Point(445, 291);
+            btnResimSec.Location = new Point(189, 269);
             btnResimSec.Name = "btnResimSec";
             btnResimSec.Size = new Size(94, 29);
             btnResimSec.TabIndex = 10;
@@ -140,11 +153,24 @@
             // 
             ofdResimSec.FileName = "openFileDialog1";
             // 
+            // label5
+            // 
+            label5.BackColor = Color.Transparent;
+            label5.Font = new Font("Sitka Small", 10.8F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label5.Location = new Point(337, 289);
+            label5.Name = "label5";
+            label5.Size = new Size(160, 52);
+            label5.TabIndex = 11;
+            label5.Text = "Resim Eklemek İçin Tıklayın";
+            // 
             // TarifEkleForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(582, 553);
+            Controls.Add(label5);
             Controls.Add(btnResimSec);
             Controls.Add(pbGorsel);
             Controls.Add(cmbKategori);
@@ -177,5 +203,6 @@
         private PictureBox pbGorsel;
         private Button btnResimSec;
         private OpenFileDialog ofdResimSec;
+        private Label label5;
     }
 }

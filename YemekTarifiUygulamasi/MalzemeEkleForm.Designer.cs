@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MalzemeEkleForm));
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
@@ -42,88 +43,106 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(32, 42);
+            label1.BackColor = Color.PeachPuff;
+            label1.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label1.Location = new Point(113, 99);
             label1.Name = "label1";
-            label1.Size = new Size(93, 20);
+            label1.Size = new Size(157, 29);
             label1.TabIndex = 0;
-            label1.Text = "Malzeme Ad";
+            label1.Text = "Malzeme Adı:";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(33, 94);
+            label2.BackColor = Color.PeachPuff;
+            label2.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.Location = new Point(113, 145);
             label2.Name = "label2";
-            label2.Size = new Size(44, 20);
+            label2.Size = new Size(82, 29);
             label2.TabIndex = 1;
-            label2.Text = "Birim";
+            label2.Text = "Birim:";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(32, 147);
+            label3.BackColor = Color.PeachPuff;
+            label3.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label3.Location = new Point(113, 188);
             label3.Name = "label3";
-            label3.Size = new Size(120, 20);
+            label3.Size = new Size(208, 29);
             label3.TabIndex = 2;
-            label3.Text = "Eklenecek Miktar";
+            label3.Text = "Eklenecek Miktar:";
             // 
             // cmbMalzemeAdi
             // 
+            cmbMalzemeAdi.BackColor = SystemColors.ButtonHighlight;
             cmbMalzemeAdi.FormattingEnabled = true;
-            cmbMalzemeAdi.Location = new Point(133, 42);
+            cmbMalzemeAdi.Location = new Point(366, 100);
             cmbMalzemeAdi.Name = "cmbMalzemeAdi";
-            cmbMalzemeAdi.Size = new Size(151, 28);
+            cmbMalzemeAdi.Size = new Size(141, 28);
             cmbMalzemeAdi.TabIndex = 3;
             // 
             // cmbBirim
             // 
             cmbBirim.FormattingEnabled = true;
-            cmbBirim.Location = new Point(132, 100);
+            cmbBirim.Location = new Point(366, 145);
             cmbBirim.Name = "cmbBirim";
-            cmbBirim.Size = new Size(151, 28);
+            cmbBirim.Size = new Size(141, 28);
             cmbBirim.TabIndex = 4;
             // 
             // txtMiktar
             // 
-            txtMiktar.Location = new Point(172, 144);
+            txtMiktar.Location = new Point(366, 188);
             txtMiktar.Name = "txtMiktar";
-            txtMiktar.Size = new Size(125, 27);
+            txtMiktar.Size = new Size(141, 27);
             txtMiktar.TabIndex = 5;
             // 
             // btnMalzemeEkle
             // 
-            btnMalzemeEkle.Location = new Point(55, 256);
+            btnMalzemeEkle.BackColor = Color.Red;
+            btnMalzemeEkle.Font = new Font("Sitka Small", 10.1999989F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnMalzemeEkle.ForeColor = SystemColors.ButtonHighlight;
+            btnMalzemeEkle.Location = new Point(134, 274);
             btnMalzemeEkle.Name = "btnMalzemeEkle";
-            btnMalzemeEkle.Size = new Size(94, 29);
+            btnMalzemeEkle.Size = new Size(167, 56);
             btnMalzemeEkle.TabIndex = 6;
-            btnMalzemeEkle.Text = "btnEkle";
-            btnMalzemeEkle.UseVisualStyleBackColor = true;
+            btnMalzemeEkle.Text = "KAYDET";
+            btnMalzemeEkle.UseVisualStyleBackColor = false;
             btnMalzemeEkle.Click += btnMalzemeEkle_Click_1;
             // 
             // btnIptal
             // 
-            btnIptal.Location = new Point(203, 252);
+            btnIptal.BackColor = Color.Red;
+            btnIptal.Font = new Font("Sitka Small", 10.1999989F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnIptal.ForeColor = SystemColors.ButtonHighlight;
+            btnIptal.Location = new Point(226, 348);
             btnIptal.Name = "btnIptal";
-            btnIptal.Size = new Size(94, 29);
+            btnIptal.Size = new Size(167, 57);
             btnIptal.TabIndex = 7;
-            btnIptal.Text = "btnIptal";
-            btnIptal.UseVisualStyleBackColor = true;
+            btnIptal.Text = "İPTAL";
+            btnIptal.UseVisualStyleBackColor = false;
             btnIptal.Click += btnIptal_Click;
             // 
             // btnYeniMalzemeEkle
             // 
-            btnYeniMalzemeEkle.Location = new Point(350, 110);
+            btnYeniMalzemeEkle.BackColor = Color.Red;
+            btnYeniMalzemeEkle.Font = new Font("Sitka Small", 10.1999989F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnYeniMalzemeEkle.ForeColor = SystemColors.ButtonHighlight;
+            btnYeniMalzemeEkle.Location = new Point(316, 274);
             btnYeniMalzemeEkle.Name = "btnYeniMalzemeEkle";
-            btnYeniMalzemeEkle.Size = new Size(94, 29);
+            btnYeniMalzemeEkle.Size = new Size(167, 56);
             btnYeniMalzemeEkle.TabIndex = 8;
-            btnYeniMalzemeEkle.Text = "yeni malzeme";
-            btnYeniMalzemeEkle.UseVisualStyleBackColor = true;
+            btnYeniMalzemeEkle.Text = "YENİ MALZEME";
+            btnYeniMalzemeEkle.UseVisualStyleBackColor = false;
             btnYeniMalzemeEkle.Click += btnYeniMalzemeEkle_Click_1;
             // 
             // MalzemeEkleForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(582, 553);
             Controls.Add(btnYeniMalzemeEkle);
             Controls.Add(btnIptal);
             Controls.Add(btnMalzemeEkle);

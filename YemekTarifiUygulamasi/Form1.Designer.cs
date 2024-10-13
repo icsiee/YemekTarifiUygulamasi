@@ -31,8 +31,11 @@
             btnMalzemeEkle = new Button();
             btnTarifEkle = new Button();
             dataGridViewTarifler = new DataGridView();
-            tarifImage = new DataGridViewImageColumn();
+            txtAra = new TextBox();
+            btnAra = new Button();
+            cmbFiltrele = new ComboBox();
             TarifID = new DataGridViewTextBoxColumn();
+            tarifImage = new DataGridViewImageColumn();
             tarifAdi = new DataGridViewTextBoxColumn();
             hazirlamaSuresi = new DataGridViewTextBoxColumn();
             maliyet = new DataGridViewTextBoxColumn();
@@ -61,7 +64,6 @@
             // 
             // dataGridViewTarifler
             // 
-            dataGridViewTarifler.AutoGenerateColumns = false; // Sütunların otomatik olarak üretilmesini engelle
             dataGridViewTarifler.AllowUserToAddRows = false;
             dataGridViewTarifler.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewTarifler.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -70,18 +72,38 @@
             dataGridViewTarifler.Name = "dataGridViewTarifler";
             dataGridViewTarifler.ReadOnly = true;
             dataGridViewTarifler.RowHeadersWidth = 51;
-            dataGridViewTarifler.RowTemplate.Height = 150;
+            dataGridViewTarifler.RowTemplate.Height = 100;
             dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewTarifler.Size = new Size(776, 441);
             dataGridViewTarifler.TabIndex = 0;
-            dataGridViewTarifler.CellClick += dataGridViewTarifler_CellClick;
+            dataGridViewTarifler.CellClick += dataGridViewTarifler_CellClick_1;
+            
             // 
-            // tarifImage
+            // txtAra
             // 
-            tarifImage.HeaderText = "tarifImage";
-            tarifImage.MinimumWidth = 6;
-            tarifImage.Name = "tarifImage";
-            tarifImage.ReadOnly = true;
+            txtAra.Location = new Point(12, 12);
+            txtAra.Name = "txtAra";
+            txtAra.Size = new Size(200, 27);
+            txtAra.TabIndex = 0;
+            // 
+            // btnAra
+            // 
+            btnAra.Location = new Point(220, 10);
+            btnAra.Name = "btnAra";
+            btnAra.Size = new Size(75, 25);
+            btnAra.TabIndex = 1;
+            btnAra.Text = "Ara";
+            btnAra.UseVisualStyleBackColor = true;
+            btnAra.Click += btnAra_Click;
+            // 
+            // cmbFiltrele
+            // 
+            cmbFiltrele.FormattingEnabled = true;
+            cmbFiltrele.Items.AddRange(new object[] { "Tüm Tarifler", "Hızlı Tarifler", "Özel Tarifler" });
+            cmbFiltrele.Location = new Point(310, 12);
+            cmbFiltrele.Name = "cmbFiltrele";
+            cmbFiltrele.Size = new Size(150, 28);
+            cmbFiltrele.TabIndex = 2;
             // 
             // TarifID
             // 
@@ -90,6 +112,14 @@
             TarifID.Name = "TarifID";
             TarifID.ReadOnly = true;
             TarifID.Visible = false;
+            // 
+            // tarifImage
+            // 
+            tarifImage.HeaderText = "tarifImage";
+            tarifImage.ImageLayout = DataGridViewImageCellLayout.Stretch;
+            tarifImage.MinimumWidth = 6;
+            tarifImage.Name = "tarifImage";
+            tarifImage.ReadOnly = true;
             // 
             // tarifAdi
             // 
@@ -117,6 +147,9 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 625);
+            Controls.Add(cmbFiltrele);
+            Controls.Add(btnAra);
+            Controls.Add(txtAra);
             Controls.Add(dataGridViewTarifler);
             Controls.Add(btnTarifEkle);
             Controls.Add(btnMalzemeEkle);
@@ -124,6 +157,7 @@
             Text = "Yemek Tarifleri Uygulaması";
             ((System.ComponentModel.ISupportInitialize)dataGridViewTarifler).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -131,8 +165,11 @@
         private Button btnMalzemeEkle;
         private Button btnTarifEkle;
         private DataGridView dataGridViewTarifler;
-        private DataGridViewImageColumn tarifImage;
+        private TextBox txtAra;
+        private Button btnAra;
+        private ComboBox cmbFiltrele;
         private DataGridViewTextBoxColumn TarifID;
+        private DataGridViewImageColumn tarifImage;
         private DataGridViewTextBoxColumn tarifAdi;
         private DataGridViewTextBoxColumn hazirlamaSuresi;
         private DataGridViewTextBoxColumn maliyet;

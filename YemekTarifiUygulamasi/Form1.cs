@@ -46,7 +46,7 @@ namespace YemekTarifiUygulamasi
 
         private void LoadTarifler()
         {
-            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
+            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@;";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 try

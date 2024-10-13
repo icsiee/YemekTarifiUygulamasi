@@ -6,7 +6,7 @@ namespace YemekTarifiUygulamasi
 {
     public partial class MalzemeEkleForm : Form
     {
-        string connectionString = "server=localhost;Database=yemektarifidb;Uid=root;Pwd='1234';";
+        string connectionString = "server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd='Ke1994+-7645@';";
 
         public MalzemeEkleForm()
         {

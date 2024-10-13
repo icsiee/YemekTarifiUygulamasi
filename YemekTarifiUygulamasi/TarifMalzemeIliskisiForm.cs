@@ -8,7 +8,7 @@ namespace YemekTarifiUygulamasi
 {
     public partial class TarifMalzemeIliskisiForm : Form
     {
-        private string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
+        private string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@;";
         private int tarifId;
 
         private List<Tuple<int, string, float>> malzemeler = new List<Tuple<int, string, float>>();

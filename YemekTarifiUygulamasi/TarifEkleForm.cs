@@ -7,7 +7,7 @@ namespace YemekTarifiUygulamasi
 {
     public partial class TarifEkleForm : Form
     {
-        public string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
+        public string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@;";
         private string selectedImagePath = string.Empty; // Seçilen görselin dosya yolu
 
         public TarifEkleForm()

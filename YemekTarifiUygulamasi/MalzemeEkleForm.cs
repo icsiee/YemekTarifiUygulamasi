@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
@@ -6,7 +7,7 @@ namespace YemekTarifiUygulamasi
 {
     public partial class MalzemeEkleForm : Form
     {
-        string connectionString = "server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd='Ke1994+-7645@';";
+        string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
 
         public MalzemeEkleForm()
         {
@@ -25,17 +26,25 @@ namespace YemekTarifiUygulamasi
         private void LoadMalzemeler()
         {
             cmbMalzemeAdi.Items.Clear();
+            List<string> malzemeListesi = new List<string>();
+
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT MalzemeAdi FROM Malzemeler";
+                string query = "SELECT MalzemeAdi FROM Malzemeler ORDER BY MalzemeAdi ASC"; // Sıralı sorgu
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 MySqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    cmbMalzemeAdi.Items.Add(reader["MalzemeAdi"].ToString());
+                    string malzemeAdi = reader["MalzemeAdi"].ToString();
+                    malzemeListesi.Add(malzemeAdi);
                 }
             }
+
+            // ComboBox'a malzemeleri ekleyelim
+            cmbMalzemeAdi.Items.AddRange(malzemeListesi.ToArray());
+            cmbMalzemeAdi.AutoCompleteMode = AutoCompleteMode.SuggestAppend; // Öneri modunu etkinleştir
+            cmbMalzemeAdi.AutoCompleteSource = AutoCompleteSource.ListItems; // AutoComplete kaynaklarını belirle
         }
 
         private float ConvertToGrams(float miktar, string birim)
@@ -52,8 +61,6 @@ namespace YemekTarifiUygulamasi
                     throw new ArgumentException("Geçersiz birim.");
             }
         }
-
-
 
         // Yeni malzeme eklendiğinde çağrılacak metod
         private void YeniMalzemeEklendi(object sender, EventArgs e)
@@ -117,6 +124,33 @@ namespace YemekTarifiUygulamasi
             yeniMalzemeEkleForm.MalzemeEklendi += YeniMalzemeEklendi;
 
             yeniMalzemeEkleForm.ShowDialog(); // Formu modals olarak aç
+        }
+
+        // Kullanıcının ComboBox'a yazdığı metne göre malzemeleri filtreleyen event
+        private void cmbMalzemeAdi_TextChanged(object sender, EventArgs e)
+        {
+            string input = cmbMalzemeAdi.Text.Trim().ToLower();
+            if (!string.IsNullOrEmpty(input))
+            {
+                var filteredItems = new List<string>();
+
+                foreach (var item in cmbMalzemeAdi.Items)
+                {
+                    if (item.ToString().ToLower().Contains(input))
+                    {
+                        filteredItems.Add(item.ToString());
+                    }
+                }
+
+                // Filtrelenmiş malzemeleri ComboBox'a güncelle
+                cmbMalzemeAdi.Items.Clear();
+                cmbMalzemeAdi.Items.AddRange(filteredItems.ToArray());
+            }
+            else
+            {
+                // Boşsa yeniden tüm malzemeleri yükle
+                LoadMalzemeler();
+            }
         }
     }
 }

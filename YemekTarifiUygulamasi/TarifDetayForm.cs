@@ -17,11 +17,11 @@ namespace YemekTarifiUygulamasi
 
         private void LoadTarifDetails()
         {
-            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@;"; // Veritabanı bağlantı dizesi
+            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234"; // Veritabanı bağlantı dizesi
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT TarifAdi, Talimatlar, GorselYolu FROM tarifler WHERE TarifID = @tarifId";
+                string query = "SELECT TarifAdi, Talimatlar, GorselAdi FROM tarifler WHERE TarifID = @tarifId";
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@tarifId", tarifId);
 
@@ -31,7 +31,7 @@ namespace YemekTarifiUygulamasi
                     {
                         lblTarifAdi.Text = reader.GetString("TarifAdi"); // Tarif adını ekle
                         txtTalimatlar.Text = reader.GetString("Talimatlar"); // Talimatları ekle
-                        pictureBoxTarif.ImageLocation = reader.GetString("GorselYolu"); // Resmi göster
+                        pictureBoxTarif.ImageLocation = reader.GetString("GorselAdi"); // Resmi göster
                     }
                 }
             }

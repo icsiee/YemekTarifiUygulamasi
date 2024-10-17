@@ -42,7 +42,7 @@
             // cmbMalzeme
             // 
             cmbMalzeme.FormattingEnabled = true;
-            cmbMalzeme.Location = new Point(191, 90);
+            cmbMalzeme.Location = new Point(191, 35);
             cmbMalzeme.Name = "cmbMalzeme";
             cmbMalzeme.Size = new Size(151, 28);
             cmbMalzeme.TabIndex = 0;
@@ -86,7 +86,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(76, 89);
+            label1.Location = new Point(72, 38);
             label1.Name = "label1";
             label1.Size = new Size(87, 20);
             label1.TabIndex = 5;

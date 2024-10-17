@@ -8,19 +8,18 @@ namespace YemekTarifiUygulamasi
 {
     public partial class TarifMalzemeIliskisiForm : Form
     {
-        private string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@;";
+        string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
         private int tarifId;
-
         private List<Tuple<int, string, float>> malzemeler = new List<Tuple<int, string, float>>();
 
         public TarifMalzemeIliskisiForm(int tarifId)
         {
             InitializeComponent();
             this.tarifId = tarifId;
-            LoadMalzemeler();
+            LoadMalzeme();
         }
 
-        private void LoadMalzemeler()
+        private void LoadMalzeme()
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
@@ -34,11 +33,9 @@ namespace YemekTarifiUygulamasi
                 }
             }
 
-            cmbMalzeme.DisplayMember = "Name"; // ComboBox'da görünecek olan alan
-            cmbMalzeme.ValueMember = "ID"; // Seçilen nesnenin değeri
+            cmbMalzeme.DisplayMember = "Name";
+            cmbMalzeme.ValueMember = "ID";
         }
-
-
 
         private void btnEkleMalzeme_Click_1(object sender, EventArgs e)
         {
@@ -46,12 +43,22 @@ namespace YemekTarifiUygulamasi
             {
                 var selectedMalzeme = (dynamic)cmbMalzeme.SelectedItem;
                 int malzemeId = selectedMalzeme.ID;
+                string malzemeAdi = selectedMalzeme.Name;
 
-                // Malzeme ve miktar bilgilerini listeye ekle
-                malzemeler.Add(new Tuple<int, string, float>(malzemeId, selectedMalzeme.Name, miktar));
+                // Malzemenin zaten listede olup olmadığını kontrol et
+                var existingMalzeme = malzemeler.Find(m => m.Item1 == malzemeId);
+                if (existingMalzeme != null)
+                {
+                    // Malzeme zaten eklenmiş, miktarı güncelle
+                    MessageBox.Show("Bu malzeme zaten eklenmiş. Miktarı güncellemek için tabloyu düzenleyebilirsiniz.");
+                    return;
+                }
+
+                // Yeni malzeme ve miktar bilgilerini listeye ekle
+                malzemeler.Add(new Tuple<int, string, float>(malzemeId, malzemeAdi, miktar));
 
                 // DataGridView'e ekle
-                dataGridViewMalzemeler.Rows.Add(selectedMalzeme.Name, miktar);
+                dataGridViewMalzemeler.Rows.Add(malzemeAdi, miktar);
 
                 // Formu temizle
                 txtMalzemeMiktar.Clear();
@@ -68,6 +75,8 @@ namespace YemekTarifiUygulamasi
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
+
+                // Tüm malzemeleri veritabanına kaydet
                 foreach (var malzeme in malzemeler)
                 {
                     MySqlCommand command = new MySqlCommand("INSERT INTO tarifmalzemeiliskisi (TarifID, MalzemeID, MalzemeMiktar) VALUES (@TarifID, @MalzemeID, @MalzemeMiktar)", connection);
@@ -80,19 +89,42 @@ namespace YemekTarifiUygulamasi
 
             MessageBox.Show("Malzemeler başarıyla kaydedildi.");
             this.Close(); // Formu kapat
-                          // Form1'e geri dön
             Form1 form1 = new Form1();
             form1.Show();
-            this.Close(); // Bu formu kapat
         }
 
         private void TarifMalzemeIliskisiForm_Load(object sender, EventArgs e)
         {
-
             // DataGridView'e sütun ekle
-            dataGridViewMalzemeler.ColumnCount = 2; // İki sütun ekliyoruz
+            dataGridViewMalzemeler.ColumnCount = 3; // Üç sütun ekliyoruz
             dataGridViewMalzemeler.Columns[0].Name = "Malzeme"; // İlk sütun malzeme adı
             dataGridViewMalzemeler.Columns[1].Name = "Miktar";  // İkinci sütun malzeme miktarı
+            dataGridViewMalzemeler.Columns[2].Name = "İşlem";   // Üçüncü sütun silme işlemi için buton olacak
+
+            // İşlem butonları ekle
+            DataGridViewButtonColumn deleteButton = new DataGridViewButtonColumn();
+            deleteButton.Name = "btnDelete";
+            deleteButton.Text = "Sil";
+            deleteButton.UseColumnTextForButtonValue = true;
+            dataGridViewMalzemeler.Columns.Add(deleteButton);
+
+            // DataGridView satır silme işlemi
+            dataGridViewMalzemeler.CellClick += (s, e) =>
+            {
+                if (e.ColumnIndex == dataGridViewMalzemeler.Columns["btnDelete"].Index && e.RowIndex >= 0)
+                {
+                    var malzemeAdi = dataGridViewMalzemeler.Rows[e.RowIndex].Cells[0].Value.ToString();
+                    var miktar = (float)dataGridViewMalzemeler.Rows[e.RowIndex].Cells[1].Value;
+
+                    // Listeden malzemeyi kaldır
+                    malzemeler.RemoveAll(m => m.Item2 == malzemeAdi && m.Item3 == miktar);
+
+                    // DataGridView'den satırı sil
+                    dataGridViewMalzemeler.Rows.RemoveAt(e.RowIndex);
+                }
+            };
         }
+
+      
     }
 }

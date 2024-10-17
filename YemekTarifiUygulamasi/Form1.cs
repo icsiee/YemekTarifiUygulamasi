@@ -20,6 +20,7 @@ namespace YemekTarifiUygulamasi
             imageColumn.Name = "Gorsel";
             imageColumn.HeaderText = "Görsel";
             dataGridViewTarifler.Columns.Add(imageColumn);
+            imageColumn.ImageLayout = DataGridViewImageCellLayout.Zoom; // Resmi orantýlý þekilde küçültüp büyütür
 
 
             // TarifID sütununu ekle
@@ -27,50 +28,62 @@ namespace YemekTarifiUygulamasi
             tarifIdColumn.Name = "TarifID";
             tarifIdColumn.HeaderText = "Tarif ID";
             tarifIdColumn.Visible = false;
+
             dataGridViewTarifler.Columns.Add(tarifIdColumn);
 
             // Diðer sütunlarý ekle
             dataGridViewTarifler.Columns.Add("TarifAdi", "Tarif Adý");
             dataGridViewTarifler.Columns.Add("HazirlamaSuresi", "Hazýrlama Süresi (dk)");
             dataGridViewTarifler.Columns.Add("ToplamMaliyet", "Toplam Maliyet");
-
+            // Eksik Maliyet sütununu ekleyelim
+            DataGridViewTextBoxColumn eksikMaliyetColumn = new DataGridViewTextBoxColumn();
+            eksikMaliyetColumn.Name = "EksikMaliyet";
+            eksikMaliyetColumn.HeaderText = "Eksik Maliyet";
+            eksikMaliyetColumn.ReadOnly = true;
+            dataGridViewTarifler.Columns.Add(eksikMaliyetColumn);
             // Diðer ayarlar
             dataGridViewTarifler.AllowUserToAddRows = false;
 
-            // Form yüklendiðinde tarifleri yükle
-            LoadTarifler();
-
             // Baþlangýçta hiçbir satýr seçili olmamasý için ClearSelection() kullan
             dataGridViewTarifler.ClearSelection();
-        }
 
+            // Seçili satýr rengini kaldýr
+            dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.CellSelect;
+
+            // Mouse olaylarýný yakalamak için event handler ekleyelim
+            dataGridViewTarifler.CellMouseEnter += DataGridViewTarifler_CellMouseEnter;
+            dataGridViewTarifler.CellMouseLeave += DataGridViewTarifler_CellMouseLeave;
+
+            // Form yüklendiðinde tarifleri yükle
+            LoadTarifler();
+        }
         private void LoadTarifler()
         {
-            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@;";
+            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 try
                 {
                     connection.Open();
                     string query = @"
-                    SELECT 
-                        t.TarifID, 
-                        t.TarifAdi, 
-                        t.HazirlamaSuresi, 
-                        SUM(m.BirimFiyat * tm.Malzememiktar) AS ToplamMaliyet, 
-                        t.GorselYolu,
-                        (SELECT SUM(m2.BirimFiyat * (tm2.Malzememiktar - m2.ToplamMiktar))
-                         FROM malzemeler m2
-                         JOIN tarifmalzemeiliskisi tm2 ON m2.MalzemeID = tm2.MalzemeID
-                         WHERE tm2.TarifID = t.TarifID AND m2.ToplamMiktar < tm2.Malzememiktar) AS EksikMaliyet
-                    FROM 
-                        tarifler t
-                    LEFT JOIN 
-                        tarifmalzemeiliskisi tm ON t.TarifID = tm.TarifID
-                    LEFT JOIN 
-                        malzemeler m ON tm.MalzemeID = m.MalzemeID
-                    GROUP BY 
-                        t.TarifID, t.TarifAdi, t.HazirlamaSuresi, t.GorselYolu";
+                SELECT 
+                    t.TarifID, 
+                    t.TarifAdi, 
+                    t.HazirlamaSuresi, 
+                    SUM(m.BirimFiyat * tm.Malzememiktar) AS ToplamMaliyet, 
+                    t.GorselAdi,
+                    (SELECT SUM(m2.BirimFiyat * (tm2.Malzememiktar - m2.ToplamMiktar))
+                     FROM malzemeler m2
+                     JOIN tarifmalzemeiliskisi tm2 ON m2.MalzemeID = tm2.MalzemeID
+                     WHERE tm2.TarifID = t.TarifID AND m2.ToplamMiktar < tm2.Malzememiktar) AS EksikMaliyet
+                FROM 
+                    tarifler t
+                LEFT JOIN 
+                    tarifmalzemeiliskisi tm ON t.TarifID = tm.TarifID
+                LEFT JOIN 
+                    malzemeler m ON tm.MalzemeID = m.MalzemeID
+                GROUP BY 
+                    t.TarifID, t.TarifAdi, t.HazirlamaSuresi, t.GorselAdi";
 
                     MySqlCommand command = new MySqlCommand(query, connection);
 
@@ -80,33 +93,43 @@ namespace YemekTarifiUygulamasi
 
                         while (reader.Read())
                         {
-                            long tarifId = reader.GetInt64("TarifID");
-                            string tarifAdi = reader.GetString("TarifAdi");
-                            int hazirlamaSuresi = reader.GetInt32("HazirlamaSuresi");
-                            decimal maliyet = reader.IsDBNull("ToplamMaliyet") ? 0 : reader.GetDecimal("ToplamMaliyet");
-                            decimal? eksikMaliyet = reader.IsDBNull("EksikMaliyet") ? null : reader.GetDecimal("EksikMaliyet");
-                            string gorselYolu = reader.GetString("GorselYolu");
-
-                            // Resmi yükle
-                            Image tarifImage = null;
-                            if (!string.IsNullOrEmpty(gorselYolu) && System.IO.File.Exists(gorselYolu))
+                            try
                             {
-                                tarifImage = Image.FromFile(gorselYolu);
+                                long tarifId = reader.GetInt64("TarifID");
+                                string tarifAdi = reader.GetString("TarifAdi");
+                                int hazirlamaSuresi = reader.GetInt32("HazirlamaSuresi");
+                                decimal maliyet = reader.IsDBNull("ToplamMaliyet") ? 0 : reader.GetDecimal("ToplamMaliyet");
+                                decimal? eksikMaliyet = reader.IsDBNull("EksikMaliyet") ? null : reader.GetDecimal("EksikMaliyet");
+                                string gorselAdi = reader.GetString("GorselAdi");
+
+                                // Resmi yükle
+                                Image tarifImage = null;
+                                string imagePath = Path.Combine(Application.StartupPath, "Images", gorselAdi);
+                                if (!string.IsNullOrEmpty(gorselAdi) && File.Exists(imagePath))
+                                {
+                                    tarifImage = Image.FromFile(imagePath);
+                                }
+
+                                // Verileri DataGridView'e ekle
+                                int rowIndex = dataGridViewTarifler.Rows.Add(tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
+
+                                // EksikMaliyet sütununa veri ekle
+                                var row = dataGridViewTarifler.Rows[rowIndex];
+                                row.Cells["EksikMaliyet"].Value = eksikMaliyet.HasValue ? eksikMaliyet.Value.ToString("C") : "Maliyet Yok";
+
+                                // Tarifin durumuna göre renk ayarla
+                                if (eksikMaliyet.HasValue)
+                                {
+                                    row.DefaultCellStyle.BackColor = Color.Red; // Eksik malzeme var
+                                }
+                                else
+                                {
+                                    row.DefaultCellStyle.BackColor = Color.Green; // Tüm malzemeler yeterli
+                                }
                             }
-
-                            // Verileri DataGridView'e ekle
-                            int rowIndex = dataGridViewTarifler.Rows.Add(tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
-                            var row = dataGridViewTarifler.Rows[rowIndex];
-
-                            // Tarifin durumuna göre renk ayarla
-                            if (eksikMaliyet.HasValue)
+                            catch (Exception ex)
                             {
-                                row.DefaultCellStyle.BackColor = Color.Red; // Eksik malzeme var
-                                row.Cells["HazirlamaSuresi"].Value += $" (Eksik Maliyet: {eksikMaliyet.Value:C})"; // Maliyet bilgisini göster
-                            }
-                            else
-                            {
-                                row.DefaultCellStyle.BackColor = Color.Green; // Tüm malzemeler yeterli
+                                MessageBox.Show("Satýr iþleme hatasý: " + ex.Message);
                             }
                         }
                     }
@@ -117,10 +140,11 @@ namespace YemekTarifiUygulamasi
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Hata: " + ex.Message);
+                    MessageBox.Show("Beklenmeyen hata: " + ex.Message);
                 }
             }
         }
+
 
         private void ShowTarifDetails(long tarifId)
         {
@@ -157,27 +181,31 @@ namespace YemekTarifiUygulamasi
                 {
                     connection.Open();
                     string query = @"
-                    SELECT 
-                        t.TarifID, 
-                        t.TarifAdi, 
-                        t.HazirlamaSuresi, 
-                        SUM(m.BirimFiyat * tm.Malzememiktar) AS ToplamMaliyet, 
-                        t.GorselYolu
-                    FROM 
-                        tarifler t
-                    LEFT JOIN 
-                        tarifmalzemeiliskisi tm ON t.TarifID = tm.TarifID
-                    LEFT JOIN 
-                        malzemeler m ON tm.MalzemeID = m.MalzemeID
-                    WHERE 
-                        t.TarifAdi LIKE @aramaKriteri";
+                SELECT 
+                    t.TarifID, 
+                    t.TarifAdi, 
+                    t.HazirlamaSuresi, 
+                    SUM(m.BirimFiyat * tm.Malzememiktar) AS ToplamMaliyet, 
+                    t.GorselAdi,
+                    (SELECT SUM(m2.BirimFiyat * (tm2.Malzememiktar - m2.ToplamMiktar))
+                     FROM malzemeler m2
+                     JOIN tarifmalzemeiliskisi tm2 ON m2.MalzemeID = tm2.MalzemeID
+                     WHERE tm2.TarifID = t.TarifID AND m2.ToplamMiktar < tm2.Malzememiktar) AS EksikMaliyet
+                FROM 
+                    tarifler t
+                LEFT JOIN 
+                    tarifmalzemeiliskisi tm ON t.TarifID = tm.TarifID
+                LEFT JOIN 
+                    malzemeler m ON tm.MalzemeID = m.MalzemeID
+                WHERE 
+                    t.TarifAdi LIKE @aramaKriteri";
 
                     if (filtreKriteri != null && filtreKriteri != "Tüm Tarifler")
                     {
                         query += " AND t.Kategori = @filtreKriteri"; // Örnek: Kategori filtresi
                     }
 
-                    query += " GROUP BY t.TarifID, t.TarifAdi, t.HazirlamaSuresi, t.GorselYolu";
+                    query += " GROUP BY t.TarifID, t.TarifAdi, t.HazirlamaSuresi, t.GorselAdi";
 
                     MySqlCommand command = new MySqlCommand(query, connection);
                     command.Parameters.AddWithValue("@aramaKriteri", "%" + aramaKriteri + "%");
@@ -187,7 +215,8 @@ namespace YemekTarifiUygulamasi
                         command.Parameters.AddWithValue("@filtreKriteri", filtreKriteri);
                     }
 
-                    dataGridViewTarifler.Rows.Clear(); // Önceki sonuçlarý temizle
+                    // DataGridView'i temizleyelim
+                    dataGridViewTarifler.Rows.Clear();
 
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
@@ -197,18 +226,32 @@ namespace YemekTarifiUygulamasi
                             string tarifAdi = reader.GetString("TarifAdi");
                             int hazirlamaSuresi = reader.GetInt32("HazirlamaSuresi");
                             decimal maliyet = reader.IsDBNull("ToplamMaliyet") ? 0 : reader.GetDecimal("ToplamMaliyet");
-                            string gorselYolu = reader.GetString("GorselYolu");
+                            decimal? eksikMaliyet = reader.IsDBNull("EksikMaliyet") ? null : reader.GetDecimal("EksikMaliyet");
+                            string gorselAdi = reader.GetString("GorselAdi");
 
                             // Resmi yükle
                             Image tarifImage = null;
-                            if (!string.IsNullOrEmpty(gorselYolu) && System.IO.File.Exists(gorselYolu))
+                            if (!string.IsNullOrEmpty(gorselAdi) && System.IO.File.Exists(gorselAdi))
                             {
-                                tarifImage = Image.FromFile(gorselYolu);
+                                tarifImage = Image.FromFile(gorselAdi);
                             }
 
-                            // Verileri DataGridView'e ekle
+                            // Verileri DataGridView'e ekleyelim
                             int rowIndex = dataGridViewTarifler.Rows.Add(tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
+
+                            // EksikMaliyet sütununa veri ekle
                             var row = dataGridViewTarifler.Rows[rowIndex];
+                            row.Cells["EksikMaliyet"].Value = eksikMaliyet.HasValue ? eksikMaliyet.Value.ToString("C") : "Maliyet Yok";
+
+                            // Tarifin durumuna göre renk ayarla
+                            if (eksikMaliyet.HasValue)
+                            {
+                                row.DefaultCellStyle.BackColor = Color.Red; // Eksik malzeme var
+                            }
+                            else
+                            {
+                                row.DefaultCellStyle.BackColor = Color.Green; // Tüm malzemeler yeterli
+                            }
                         }
                     }
                 }
@@ -223,7 +266,34 @@ namespace YemekTarifiUygulamasi
             }
         }
 
-        private void dataGridViewTarifler_CellClick_1(object sender, DataGridViewCellEventArgs e)
+
+        // Fare ile üzerine gelindiðinde yazýyý beyaza döndür
+        private void DataGridViewTarifler_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0) // Geçerli bir satýr varsa
+            {
+                var row = dataGridViewTarifler.Rows[e.RowIndex];
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    cell.Style.ForeColor = Color.White; // Yazýyý beyaza döndür
+                }
+            }
+        }
+
+        // Fare ile satýrdan ayrýldýðýnda yazýyý tekrar siyaha döndür
+        private void DataGridViewTarifler_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0) // Geçerli bir satýr varsa
+            {
+                var row = dataGridViewTarifler.Rows[e.RowIndex];
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    cell.Style.ForeColor = Color.Black; // Yazýyý tekrar siyaha döndür
+                }
+            }
+        }
+
+        private void dataGridViewTarifler_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0) // Geçerli bir satýr seçildi mi kontrol et
             {

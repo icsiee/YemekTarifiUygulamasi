@@ -7,7 +7,7 @@ namespace YemekTarifiUygulamasi
 {
     public partial class TarifEkleForm : Form
     {
-        public string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@;";
+        string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
         private string selectedImagePath = string.Empty; // Seçilen görselin dosya yolu
 
         public TarifEkleForm()
@@ -51,7 +51,7 @@ namespace YemekTarifiUygulamasi
             {
                 try
                 {
-                    // Görseli veritabanına kaydetmek için dosya yolunu kullanıyoruz
+                    // Görseli projenin Images klasörüne kaydetmek için dosya adını kullanıyoruz
                     string imageFileName = Path.GetFileName(selectedImagePath);
                     string imageSavePath = Path.Combine(Application.StartupPath, "Images", imageFileName);
 
@@ -82,12 +82,12 @@ namespace YemekTarifiUygulamasi
                         else
                         {
                             // Tarif ismi benzersizse eklemeye devam et
-                            MySqlCommand command = new MySqlCommand("INSERT INTO Tarifler (TarifAdi, Kategori, HazirlamaSuresi, Talimatlar, GorselYolu) VALUES (@TarifAdi, @Kategori, @HazirlamaSuresi, @Talimatlar, @GorselYolu); SELECT LAST_INSERT_ID();", connection);
+                            MySqlCommand command = new MySqlCommand("INSERT INTO Tarifler (TarifAdi, Kategori, HazirlamaSuresi, Talimatlar, GorselAdi) VALUES (@TarifAdi, @Kategori, @HazirlamaSuresi, @Talimatlar, @GorselAdi); SELECT LAST_INSERT_ID();", connection);
                             command.Parameters.AddWithValue("@TarifAdi", txtTarifAdi.Text);
                             command.Parameters.AddWithValue("@Kategori", cmbKategori.SelectedItem.ToString());
                             command.Parameters.AddWithValue("@HazirlamaSuresi", hazirlamaSuresi);
                             command.Parameters.AddWithValue("@Talimatlar", txtTalimatlar.Text);
-                            command.Parameters.AddWithValue("@GorselYolu", imageSavePath); // Görsel dosya yolunu kaydet
+                            command.Parameters.AddWithValue("@GorselAdi", imageFileName); // Görsel dosya adını kaydet
 
                             int yeniTarifId = Convert.ToInt32(command.ExecuteScalar());
                             MessageBox.Show("Tarif başarıyla eklendi.");
@@ -110,6 +110,7 @@ namespace YemekTarifiUygulamasi
                 MessageBox.Show("Lütfen tüm alanları doldurun ve bir görsel seçin.");
             }
         }
+
 
         private void btnResimSec_Click_1(object sender, EventArgs e)
         {

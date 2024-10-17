@@ -31,14 +31,14 @@
             btnMalzemeEkle = new Button();
             btnTarifEkle = new Button();
             dataGridViewTarifler = new DataGridView();
-            txtAra = new TextBox();
-            btnAra = new Button();
-            cmbFiltrele = new ComboBox();
             TarifID = new DataGridViewTextBoxColumn();
             tarifImage = new DataGridViewImageColumn();
             tarifAdi = new DataGridViewTextBoxColumn();
             hazirlamaSuresi = new DataGridViewTextBoxColumn();
             maliyet = new DataGridViewTextBoxColumn();
+            txtAra = new TextBox();
+            btnAra = new Button();
+            cmbFiltrele = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dataGridViewTarifler).BeginInit();
             SuspendLayout();
             // 
@@ -48,7 +48,7 @@
             btnMalzemeEkle.Name = "btnMalzemeEkle";
             btnMalzemeEkle.Size = new Size(94, 29);
             btnMalzemeEkle.TabIndex = 0;
-            btnMalzemeEkle.Text = "Malzeme";
+            btnMalzemeEkle.Text = "Malzeme Ekle";
             btnMalzemeEkle.UseVisualStyleBackColor = true;
             btnMalzemeEkle.Click += btnMalzemeEkle_Click_1;
             // 
@@ -58,26 +58,83 @@
             btnTarifEkle.Name = "btnTarifEkle";
             btnTarifEkle.Size = new Size(94, 29);
             btnTarifEkle.TabIndex = 1;
-            btnTarifEkle.Text = "Tarif";
+            btnTarifEkle.Text = "TarifEkle";
             btnTarifEkle.UseVisualStyleBackColor = true;
             btnTarifEkle.Click += btnTarifEkle_Click;
+
             // 
             // dataGridViewTarifler
             // 
             dataGridViewTarifler.AllowUserToAddRows = false;
             dataGridViewTarifler.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewTarifler.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewTarifler.Columns.AddRange(new DataGridViewColumn[] { TarifID, tarifImage, tarifAdi, hazirlamaSuresi, maliyet });
+
+            DataGridViewImageColumn tarifImageColumn = new DataGridViewImageColumn();
+            tarifImageColumn.Name = "tarifImage";
+            tarifImageColumn.HeaderText = "Tarif Resmi";
+            tarifImageColumn.ImageLayout = DataGridViewImageCellLayout.Normal;
+
+            dataGridViewTarifler.Columns.AddRange(new DataGridViewColumn[] {
+    TarifID,
+    tarifImageColumn,
+    tarifAdi,
+    hazirlamaSuresi,
+    maliyet
+});
+            // Eksik Maliyet sütununu ekleyelim
+            DataGridViewTextBoxColumn eksikMaliyetColumn = new DataGridViewTextBoxColumn();
+            eksikMaliyetColumn.Name = "EksikMaliyet";
+            eksikMaliyetColumn.HeaderText = "Eksik Maliyet";
+            eksikMaliyetColumn.ReadOnly = true;
+            dataGridViewTarifler.Columns.Add(eksikMaliyetColumn);
+
             dataGridViewTarifler.Location = new Point(12, 172);
             dataGridViewTarifler.Name = "dataGridViewTarifler";
             dataGridViewTarifler.ReadOnly = true;
             dataGridViewTarifler.RowHeadersWidth = 51;
             dataGridViewTarifler.RowTemplate.Height = 100;
-            dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.FullRowSelect; // Satır seçimi
             dataGridViewTarifler.Size = new Size(776, 441);
             dataGridViewTarifler.TabIndex = 0;
-            dataGridViewTarifler.CellClick += dataGridViewTarifler_CellClick_1;
-            
+            dataGridViewTarifler.CellContentDoubleClick += dataGridViewTarifler_CellContentDoubleClick;
+
+           
+            // 
+            // TarifID
+            // 
+            TarifID.HeaderText = "Column1";
+            TarifID.MinimumWidth = 6;
+            TarifID.Name = "TarifID";
+            TarifID.ReadOnly = true;
+            TarifID.Visible = false;
+            // 
+            // tarifImage
+            // 
+            tarifImage.HeaderText = "tarifImage";
+            tarifImage.MinimumWidth = 6;
+            tarifImage.Name = "tarifImage";
+            tarifImage.ReadOnly = true;
+            // 
+            // tarifAdi
+            // 
+            tarifAdi.HeaderText = "Tarif Adı";
+            tarifAdi.MinimumWidth = 6;
+            tarifAdi.Name = "tarifAdi";
+            tarifAdi.ReadOnly = true;
+            // 
+            // hazirlamaSuresi
+            // 
+            hazirlamaSuresi.HeaderText = "Hazırlama Süresi";
+            hazirlamaSuresi.MinimumWidth = 6;
+            hazirlamaSuresi.Name = "hazirlamaSuresi";
+            hazirlamaSuresi.ReadOnly = true;
+            // 
+            // maliyet
+            // 
+            maliyet.HeaderText = "Maliyet";
+            maliyet.MinimumWidth = 6;
+            maliyet.Name = "maliyet";
+            maliyet.ReadOnly = true;
             // 
             // txtAra
             // 
@@ -104,43 +161,6 @@
             cmbFiltrele.Name = "cmbFiltrele";
             cmbFiltrele.Size = new Size(150, 28);
             cmbFiltrele.TabIndex = 2;
-            // 
-            // TarifID
-            // 
-            TarifID.HeaderText = "Column1";
-            TarifID.MinimumWidth = 6;
-            TarifID.Name = "TarifID";
-            TarifID.ReadOnly = true;
-            TarifID.Visible = false;
-            // 
-            // tarifImage
-            // 
-            tarifImage.HeaderText = "tarifImage";
-            tarifImage.ImageLayout = DataGridViewImageCellLayout.Stretch;
-            tarifImage.MinimumWidth = 6;
-            tarifImage.Name = "tarifImage";
-            tarifImage.ReadOnly = true;
-            // 
-            // tarifAdi
-            // 
-            tarifAdi.HeaderText = "Tarif Adı";
-            tarifAdi.MinimumWidth = 6;
-            tarifAdi.Name = "tarifAdi";
-            tarifAdi.ReadOnly = true;
-            // 
-            // hazirlamaSuresi
-            // 
-            hazirlamaSuresi.HeaderText = "Hazırlama Süresi";
-            hazirlamaSuresi.MinimumWidth = 6;
-            hazirlamaSuresi.Name = "hazirlamaSuresi";
-            hazirlamaSuresi.ReadOnly = true;
-            // 
-            // maliyet
-            // 
-            maliyet.HeaderText = "Maliyet";
-            maliyet.MinimumWidth = 6;
-            maliyet.Name = "maliyet";
-            maliyet.ReadOnly = true;
             // 
             // Form1
             // 

@@ -28,19 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-
             btnMalzemeEkle = new Button();
             btnTarifEkle = new Button();
             dataGridViewTarifler = new DataGridView();
             TarifID = new DataGridViewTextBoxColumn();
-            tarifImage = new DataGridViewImageColumn();
+            tarifImageColumn = new DataGridViewImageColumn();
             tarifAdi = new DataGridViewTextBoxColumn();
             hazirlamaSuresi = new DataGridViewTextBoxColumn();
             maliyet = new DataGridViewTextBoxColumn();
+            eksikMaliyetColumn = new DataGridViewTextBoxColumn();
+            tarifImage = new DataGridViewImageColumn();
             txtAra = new TextBox();
             btnAra = new Button();
             cmbFiltrele = new ComboBox();
+            pictureBoxYenile = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)dataGridViewTarifler).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxYenile).BeginInit();
             SuspendLayout();
             // 
             // btnMalzemeEkle
@@ -62,44 +65,22 @@
             btnTarifEkle.Text = "TarifEkle";
             btnTarifEkle.UseVisualStyleBackColor = true;
             btnTarifEkle.Click += btnTarifEkle_Click;
-
             // 
             // dataGridViewTarifler
             // 
             dataGridViewTarifler.AllowUserToAddRows = false;
             dataGridViewTarifler.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewTarifler.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-
-            DataGridViewImageColumn tarifImageColumn = new DataGridViewImageColumn();
-            tarifImageColumn.Name = "tarifImage";
-            tarifImageColumn.HeaderText = "Tarif Resmi";
-            tarifImageColumn.ImageLayout = DataGridViewImageCellLayout.Normal;
-
-            dataGridViewTarifler.Columns.AddRange(new DataGridViewColumn[] {
-    TarifID,
-    tarifImageColumn,
-    tarifAdi,
-    hazirlamaSuresi,
-    maliyet
-});
-            // Eksik Maliyet sütununu ekleyelim
-            DataGridViewTextBoxColumn eksikMaliyetColumn = new DataGridViewTextBoxColumn();
-            eksikMaliyetColumn.Name = "EksikMaliyet";
-            eksikMaliyetColumn.HeaderText = "Eksik Maliyet";
-            eksikMaliyetColumn.ReadOnly = true;
-            dataGridViewTarifler.Columns.Add(eksikMaliyetColumn);
-
+            dataGridViewTarifler.Columns.AddRange(new DataGridViewColumn[] { TarifID, tarifImageColumn, tarifAdi, hazirlamaSuresi, maliyet, eksikMaliyetColumn });
             dataGridViewTarifler.Location = new Point(12, 172);
             dataGridViewTarifler.Name = "dataGridViewTarifler";
             dataGridViewTarifler.ReadOnly = true;
             dataGridViewTarifler.RowHeadersWidth = 51;
             dataGridViewTarifler.RowTemplate.Height = 100;
-            dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.FullRowSelect; // Satır seçimi
+            dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewTarifler.Size = new Size(776, 441);
             dataGridViewTarifler.TabIndex = 0;
             dataGridViewTarifler.CellContentDoubleClick += dataGridViewTarifler_CellContentDoubleClick;
-
-           
             // 
             // TarifID
             // 
@@ -109,12 +90,12 @@
             TarifID.ReadOnly = true;
             TarifID.Visible = false;
             // 
-            // tarifImage
+            // tarifImageColumn
             // 
-            tarifImage.HeaderText = "tarifImage";
-            tarifImage.MinimumWidth = 6;
-            tarifImage.Name = "tarifImage";
-            tarifImage.ReadOnly = true;
+            tarifImageColumn.HeaderText = "Tarif Resmi";
+            tarifImageColumn.MinimumWidth = 6;
+            tarifImageColumn.Name = "tarifImageColumn";
+            tarifImageColumn.ReadOnly = true;
             // 
             // tarifAdi
             // 
@@ -137,6 +118,21 @@
             maliyet.Name = "maliyet";
             maliyet.ReadOnly = true;
             // 
+            // eksikMaliyetColumn
+            // 
+            eksikMaliyetColumn.HeaderText = "Eksik Maliyet";
+            eksikMaliyetColumn.MinimumWidth = 6;
+            eksikMaliyetColumn.Name = "eksikMaliyetColumn";
+            eksikMaliyetColumn.ReadOnly = true;
+            // 
+            // tarifImage
+            // 
+            tarifImage.HeaderText = "tarifImage";
+            tarifImage.MinimumWidth = 6;
+            tarifImage.Name = "tarifImage";
+            tarifImage.ReadOnly = true;
+            tarifImage.Width = 125;
+            // 
             // txtAra
             // 
             txtAra.Location = new Point(12, 12);
@@ -157,25 +153,29 @@
             // cmbFiltrele
             // 
             cmbFiltrele.FormattingEnabled = true;
-            cmbFiltrele.Items.AddRange(new object[] {
-    "Atıştırmalıklar",
-    "Tatlılar",
-    "İçecekler",
-    "Sebze Yemekleri",
-    "Kahvaltılıklar",
-    "Ana Yemekler",
-    "Tümü"
-});
+            cmbFiltrele.Items.AddRange(new object[] { "Atıştırmalıklar", "Tatlılar", "İçecekler", "Sebze Yemekleri", "Kahvaltılıklar", "Ana Yemekler", "Tümü" });
             cmbFiltrele.Location = new Point(310, 12);
             cmbFiltrele.Name = "cmbFiltrele";
             cmbFiltrele.Size = new Size(150, 28);
             cmbFiltrele.TabIndex = 2;
+            // 
+            // pictureBoxYenile
+            // 
+            pictureBoxYenile.Image = Properties.Resources.indir;
+            pictureBoxYenile.Location = new Point(748, 12);
+            pictureBoxYenile.Name = "pictureBoxYenile";
+            pictureBoxYenile.Size = new Size(40, 37);
+            pictureBoxYenile.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBoxYenile.TabIndex = 4;
+            pictureBoxYenile.TabStop = false;
+            pictureBoxYenile.Click += pictureBoxYenile_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 625);
+            Controls.Add(pictureBoxYenile);
             Controls.Add(cmbFiltrele);
             Controls.Add(btnAra);
             Controls.Add(txtAra);
@@ -184,7 +184,9 @@
             Controls.Add(btnMalzemeEkle);
             Name = "Form1";
             Text = "Yemek Tarifleri Uygulaması";
+            Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridViewTarifler).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxYenile).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -202,5 +204,8 @@
         private DataGridViewTextBoxColumn tarifAdi;
         private DataGridViewTextBoxColumn hazirlamaSuresi;
         private DataGridViewTextBoxColumn maliyet;
+        private DataGridViewImageColumn tarifImageColumn;
+        private DataGridViewTextBoxColumn eksikMaliyetColumn;
+        private PictureBox pictureBoxYenile;
     }
 }

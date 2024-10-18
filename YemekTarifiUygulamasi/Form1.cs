@@ -8,6 +8,7 @@ namespace YemekTarifiUygulamasi
 {
     public partial class Form1 : Form
     {
+        string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234";
 
 
         public Form1()
@@ -61,6 +62,8 @@ namespace YemekTarifiUygulamasi
             this.KeyDown += new KeyEventHandler(Form1_KeyDown);
 
 
+
+
             // Form yüklendiðinde tarifleri yükle
             LoadTarifler();
         }
@@ -105,7 +108,7 @@ namespace YemekTarifiUygulamasi
                                 long tarifId = reader.GetInt64("TarifID");
                                 string tarifAdi = reader.GetString("TarifAdi");
                                 int hazirlamaSuresi = reader.GetInt32("HazirlamaSuresi");
-                                decimal maliyet = reader.IsDBNull("ToplamMaliyet") ? 0 : reader.GetDecimal("ToplamMaliyet");
+                                decimal maliyet = reader.IsDBNull(reader.GetOrdinal("ToplamMaliyet")) ? 0 : reader.GetDecimal(reader.GetOrdinal("ToplamMaliyet"));
                                 decimal? eksikMaliyet = reader.IsDBNull("EksikMaliyet") ? null : reader.GetDecimal("EksikMaliyet");
                                 string gorselAdi = reader.GetString("GorselAdi");
 
@@ -264,7 +267,7 @@ namespace YemekTarifiUygulamasi
                             long tarifId = reader.GetInt64("TarifID");
                             string tarifAdi = reader.GetString("TarifAdi");
                             int hazirlamaSuresi = reader.GetInt32("HazirlamaSuresi");
-                            decimal maliyet = reader.IsDBNull("ToplamMaliyet") ? 0 : reader.GetDecimal("ToplamMaliyet");
+                            decimal maliyet = reader.IsDBNull(reader.GetOrdinal("ToplamMaliyet")) ? 0 : reader.GetDecimal(reader.GetOrdinal("ToplamMaliyet"));
                             decimal? eksikMaliyet = reader.IsDBNull("EksikMaliyet") ? null : reader.GetDecimal("EksikMaliyet");
                             string gorselAdi = reader.GetString("GorselAdi");
 
@@ -351,5 +354,22 @@ namespace YemekTarifiUygulamasi
                 ShowTarifDetails(tarifId); // Tarif detaylarýný göster
             }
         }
+
+
+        private void pictureBoxYenile_Click(object sender, EventArgs e)
+        {
+            LoadTarifler();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
+            LoadTarifler();
+        }
+
+        // MySQL baðlantý dizesini ayarlayýn
+
+
+
     }
 }

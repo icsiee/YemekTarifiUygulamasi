@@ -8,13 +8,16 @@ namespace YemekTarifiUygulamasi
     public partial class MalzemeEkleForm : Form
     {
         string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
+        private Form1 form1; // Form1 referansı
 
-        public MalzemeEkleForm()
+
+        public MalzemeEkleForm(Form1 form1)
         {
             InitializeComponent();
             cmbBirim.Items.Add("Kilogram");
             cmbBirim.Items.Add("Gram");
             cmbBirim.Items.Add("Litre");
+            this.form1 = form1;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -28,24 +31,33 @@ namespace YemekTarifiUygulamasi
             cmbMalzemeAdi.Items.Clear();
             List<string> malzemeListesi = new List<string>();
 
-            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            try
             {
-                conn.Open();
-                string query = "SELECT MalzemeAdi FROM Malzemeler ORDER BY MalzemeAdi ASC"; // Sıralı sorgu
-                MySqlCommand cmd = new MySqlCommand(query, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    string malzemeAdi = reader["MalzemeAdi"].ToString();
-                    malzemeListesi.Add(malzemeAdi);
-                }
-            }
+                    conn.Open();
+                    string query = "SELECT MalzemeAdi FROM Malzemeler ORDER BY MalzemeAdi ASC"; // Sıralı sorgu
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    MySqlDataReader reader = cmd.ExecuteReader();
 
-            // ComboBox'a malzemeleri ekleyelim
-            cmbMalzemeAdi.Items.AddRange(malzemeListesi.ToArray());
-            cmbMalzemeAdi.AutoCompleteMode = AutoCompleteMode.SuggestAppend; // Öneri modunu etkinleştir
-            cmbMalzemeAdi.AutoCompleteSource = AutoCompleteSource.ListItems; // AutoComplete kaynaklarını belirle
+                    while (reader.Read())
+                    {
+                        string malzemeAdi = reader["MalzemeAdi"].ToString();
+                        malzemeListesi.Add(malzemeAdi);
+                    }
+                }
+
+                // ComboBox'a malzemeleri ekleyelim
+                cmbMalzemeAdi.Items.AddRange(malzemeListesi.ToArray());
+                cmbMalzemeAdi.AutoCompleteMode = AutoCompleteMode.SuggestAppend; // Öneri modunu etkinleştir
+                cmbMalzemeAdi.AutoCompleteSource = AutoCompleteSource.ListItems; // AutoComplete kaynaklarını belirle
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Veritabanı bağlantısı sırasında hata oluştu: {ex.Message}");
+            }
         }
+
 
         private float ConvertToGrams(float miktar, string birim)
         {
@@ -109,16 +121,21 @@ namespace YemekTarifiUygulamasi
                 }
             }
             this.Close();
+            form1.Show();
+            
         }
 
         private void btnIptal_Click(object sender, EventArgs e)
         {
-            this.Close();
+            this.Hide();
+            form1.ShowDialog();
         }
 
         private void btnYeniMalzemeEkle_Click_1(object sender, EventArgs e)
         {
-            YeniMalzemeEkleForm yeniMalzemeEkleForm = new YeniMalzemeEkleForm();
+            
+            this.Hide();
+            YeniMalzemeEkleForm yeniMalzemeEkleForm = new YeniMalzemeEkleForm(form1,this);
 
             // Olay dinleyicisi ekleyin
             yeniMalzemeEkleForm.MalzemeEklendi += YeniMalzemeEklendi;

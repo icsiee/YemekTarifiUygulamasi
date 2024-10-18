@@ -9,13 +9,17 @@ namespace YemekTarifiUygulamasi
         public event EventHandler MalzemeEklendi;
 
         string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
+        private Form1 form1; // Form1 referansı
+        private MalzemeEkleForm malzemeEkleForm;
 
-        public YeniMalzemeEkleForm()
+        public YeniMalzemeEkleForm(Form1 form1, MalzemeEkleForm malzemeEkleForm)
         {
             InitializeComponent();
             cmbBirim.Items.Add("Kilogram");
             cmbBirim.Items.Add("Gram");
             cmbBirim.Items.Add("Litre");
+            this.form1 = form1;
+            this.malzemeEkleForm = malzemeEkleForm;
         }
 
 
@@ -40,9 +44,39 @@ namespace YemekTarifiUygulamasi
         private void btnEkle_Click(object sender, EventArgs e)
         {
             string malzemeAdi = txtMalzemeAdi.Text.Trim();
-            string birim = cmbBirim.SelectedItem.ToString();
+            string birim = cmbBirim.SelectedItem?.ToString(); // null kontrolü yapıldı
             float miktar;
             decimal birimFiyat;
+
+            // Kontroller
+            List<string> eksikAlanlar = new List<string>();
+
+            if (string.IsNullOrEmpty(malzemeAdi))
+            {
+                eksikAlanlar.Add("Malzeme adı");
+            }
+
+            if (string.IsNullOrEmpty(birim))
+            {
+                eksikAlanlar.Add("Birim");
+            }
+
+            if (!float.TryParse(txtMiktar.Text.Trim(), out miktar))
+            {
+                eksikAlanlar.Add("Miktar");
+            }
+
+            if (!decimal.TryParse(txtBirimFiyat.Text.Trim(), out birimFiyat))
+            {
+                eksikAlanlar.Add("Birim fiyatı");
+            }
+
+            if (eksikAlanlar.Count > 0)
+            {
+                string eksikAlanlarMesaji = "Lütfen aşağıdaki alanları doldurun:\n- " + string.Join("\n- ", eksikAlanlar);
+                MessageBox.Show(eksikAlanlarMesaji);
+                return;
+            }
 
             // Miktar ve birim fiyatı kontrolü
             if (!float.TryParse(txtMiktar.Text.Trim(), out miktar) || !decimal.TryParse(txtBirimFiyat.Text.Trim(), out birimFiyat))
@@ -90,12 +124,14 @@ namespace YemekTarifiUygulamasi
             MalzemeEklendi?.Invoke(this, EventArgs.Empty);
 
             this.Close();
+            form1.Show();
 
         }
 
         private void btnIptal_Click(object sender, EventArgs e)
         {
             this.Close();
+            malzemeEkleForm.Show();
 
         }
     }

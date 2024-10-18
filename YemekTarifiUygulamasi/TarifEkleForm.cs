@@ -1,6 +1,8 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace YemekTarifiUygulamasi
@@ -12,10 +14,10 @@ namespace YemekTarifiUygulamasi
         string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
         private string selectedImagePath = string.Empty; // Seçilen görselin dosya yolu
 
-        public TarifEkleForm(Form1 parentForm)
+        public TarifEkleForm(Form1 form1) // Form1 referansı parametre olarak alınıyor
         {
             InitializeComponent();
-            form1 = parentForm; // Form1 referansını al
+            this.form1 = form1; // Form1 referansını ayarlıyoruz
             LoadCategories(); // Kategorileri yükle
             lstTalimatlar.ScrollAlwaysVisible = true; // Kaydırma çubuğunu her zaman görünür yap
             lstTalimatlar.HorizontalScrollbar = true;
@@ -27,12 +29,12 @@ namespace YemekTarifiUygulamasi
             // ComboBox'ı kategoriler ile doldur
             cmbKategori.Items.AddRange(new object[]
             {
-            "Atıştırmalıklar",
-            "Tatlılar",
-            "İçecekler",
-            "Sebze Yemekleri",
-            "Kahvaltılıklar",
-            "Ana Yemekler"
+                "Atıştırmalıklar",
+                "Tatlılar",
+                "İçecekler",
+                "Sebze Yemekleri",
+                "Kahvaltılıklar",
+                "Ana Yemekler"
             });
         }
 
@@ -57,14 +59,14 @@ namespace YemekTarifiUygulamasi
             {
                 try
                 {
-                    // Görseli projenin Images klasörüne kaydetmek için dosya adını kullanıyoruz
+                    // Görseli belirttiğiniz dizine kaydetmek için dosya adını kullanıyoruz
                     string imageFileName = Path.GetFileName(selectedImagePath);
-                    string imageSavePath = Path.Combine(Application.StartupPath, "Images", imageFileName);
+                    string imageSavePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", imageFileName);
 
                     // Eğer dizin yoksa oluştur
-                    if (!Directory.Exists(Path.Combine(Application.StartupPath, "Images")))
+                    if (!Directory.Exists(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources"))
                     {
-                        Directory.CreateDirectory(Path.Combine(Application.StartupPath, "Images"));
+                        Directory.CreateDirectory(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources");
                     }
 
                     // Dosyayı hedef dizine kopyala
@@ -74,39 +76,31 @@ namespace YemekTarifiUygulamasi
                     {
                         connection.Open();
 
-                        // Aynı isimde başka bir tarif olup olmadığını kontrol et
-                        MySqlCommand checkCommand = new MySqlCommand("SELECT COUNT(*) FROM Tarifler WHERE TarifAdi = @TarifAdi", connection);
-                        checkCommand.Parameters.AddWithValue("@TarifAdi", txtTarifAdi.Text);
+                        // Tarif ismi benzersiz olmasa bile eklemeye devam et
+                        MySqlCommand command = new MySqlCommand("INSERT INTO Tarifler (TarifAdi, Kategori, HazirlamaSuresi, Talimatlar, GorselAdi) VALUES (@TarifAdi, @Kategori, @HazirlamaSuresi, @Talimatlar, @GorselAdi); SELECT LAST_INSERT_ID();", connection);
+                        command.Parameters.AddWithValue("@TarifAdi", txtTarifAdi.Text);
+                        command.Parameters.AddWithValue("@Kategori", cmbKategori.SelectedItem.ToString());
+                        command.Parameters.AddWithValue("@HazirlamaSuresi", hazirlamaSuresi);
 
-                        int count = Convert.ToInt32(checkCommand.ExecuteScalar());
+                        // Talimatlar ListBox'ındaki tüm maddeleri birleştir
+                        string talimatlar = string.Join("\n", lstTalimatlar.Items.Cast<string>());
+                        command.Parameters.AddWithValue("@Talimatlar", talimatlar);
+                        command.Parameters.AddWithValue("@GorselAdi", imageFileName); // Görsel dosya adını kaydet
 
-                        if (count > 0)
-                        {
-                            // Eğer aynı isimde tarif varsa kullanıcıya uyarı ver
-                            MessageBox.Show("Bu isimde başka bir tarif zaten mevcut. Lütfen başka bir isim girin.");
-                        }
-                        else
-                        {
-                            // Tarif ismi benzersizse eklemeye devam et
-                            MySqlCommand command = new MySqlCommand("INSERT INTO Tarifler (TarifAdi, Kategori, HazirlamaSuresi, Talimatlar, GorselAdi) VALUES (@TarifAdi, @Kategori, @HazirlamaSuresi, @Talimatlar, @GorselAdi); SELECT LAST_INSERT_ID();", connection);
-                            command.Parameters.AddWithValue("@TarifAdi", txtTarifAdi.Text);
-                            command.Parameters.AddWithValue("@Kategori", cmbKategori.SelectedItem.ToString());
-                            command.Parameters.AddWithValue("@HazirlamaSuresi", hazirlamaSuresi);
+                        int yeniTarifId = Convert.ToInt32(command.ExecuteScalar());
+                        MessageBox.Show("Tarif başarıyla eklendi.");
 
-                            // Talimatlar ListBox'ındaki tüm maddeleri birleştir
-                            string talimatlar = string.Join("\n", lstTalimatlar.Items.Cast<string>());
-                            command.Parameters.AddWithValue("@Talimatlar", talimatlar);
-                            command.Parameters.AddWithValue("@GorselAdi", Path.GetFileName(selectedImagePath)); // Görsel dosya adını kaydet
+                        // Malzeme ilişkisi formunu aç
+                        TarifMalzemeIliskisiForm malzemeIliskisiForm = new TarifMalzemeIliskisiForm(form1, yeniTarifId);
+                        this.Close(); // Formu kapat
+                        this.Hide(); // Formu gizler
 
-                            int yeniTarifId = Convert.ToInt32(command.ExecuteScalar());
-                            MessageBox.Show("Tarif başarıyla eklendi.");
+                        malzemeIliskisiForm.ShowDialog();
 
-                            // Malzeme ilişkisi formunu aç
-                            TarifMalzemeIliskisiForm malzemeIliskisiForm = new TarifMalzemeIliskisiForm(form1, yeniTarifId);
-                            malzemeIliskisiForm.ShowDialog();
+                        ClearForm(); // Formu temizle
 
-                            ClearForm(); // Formu temizle
-                        }
+                        // Form1'deki DataGridView'i güncelle
+                        form1.LoadTarifler(); // DataGridView'i güncellemeye yönelik metodu çağır
                     }
                 }
                 catch (Exception ex)
@@ -118,6 +112,10 @@ namespace YemekTarifiUygulamasi
             {
                 MessageBox.Show("Lütfen tüm alanları doldurun ve bir görsel seçin.");
             }
+
+            
+
+
         }
 
         // Görsel seçim işlemi, PictureBox'a tıklanarak yapılacak
@@ -167,5 +165,4 @@ namespace YemekTarifiUygulamasi
             pen.Dispose();
         }
     }
-
 }

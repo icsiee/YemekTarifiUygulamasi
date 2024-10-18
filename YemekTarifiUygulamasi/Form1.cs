@@ -14,7 +14,6 @@ namespace YemekTarifiUygulamasi
         public Form1()
         {
             InitializeComponent();
-
             // DataGridView'e sütun ekle
             dataGridViewTarifler.Columns.Clear();
 
@@ -67,7 +66,7 @@ namespace YemekTarifiUygulamasi
             // Form yüklendiðinde tarifleri yükle
             LoadTarifler();
         }
-        private void LoadTarifler()
+        public void LoadTarifler()
         {
             string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -155,27 +154,6 @@ namespace YemekTarifiUygulamasi
             }
         }
 
-        // Yeni tarifi eklemek için Form1'de bir fonksiyon
-        public void AddNewTarifToGrid(int tarifId, string tarifAdi, int hazirlamaSuresi, string gorselAdi)
-        {
-            Image tarifImage = null;
-            string imagePath = Path.Combine(Application.StartupPath, "Images", gorselAdi);
-            if (!string.IsNullOrEmpty(gorselAdi) && File.Exists(imagePath))
-            {
-                tarifImage = Image.FromFile(imagePath);
-            }
-
-            // Yeni tarifi DataGridView'e ekle
-            int rowIndex = dataGridViewTarifler.Rows.Add(tarifImage, tarifId, tarifAdi, hazirlamaSuresi, 0);
-
-            // Eksik Maliyet bilgisi ekleyebilirsiniz (örneðin, "Eksik Maliyet Yok" diyebilirsiniz)
-            var row = dataGridViewTarifler.Rows[rowIndex];
-            row.Cells["EksikMaliyet"].Value = "Eksik Maliyet Yok";
-
-            // Yeni eklenen tarife özel stil ayarý
-            row.DefaultCellStyle.BackColor = Color.Green; // Eklenen tariflerin arka planý yeþil
-        }
-
 
         private void ShowTarifDetails(long tarifId)
         {
@@ -185,8 +163,10 @@ namespace YemekTarifiUygulamasi
 
         private void btnMalzemeEkle_Click_1(object sender, EventArgs e)
         {
-            MalzemeEkleForm malzemeEkleForm = new MalzemeEkleForm();
+            this.Hide();
+            MalzemeEkleForm malzemeEkleForm = new MalzemeEkleForm(this);
             malzemeEkleForm.ShowDialog(); // Formu modal olarak aç
+            
         }
 
         private void cmbFiltrele_SelectedIndexChanged(object sender, EventArgs e)
@@ -200,6 +180,8 @@ namespace YemekTarifiUygulamasi
 
         private void btnTarifEkle_Click(object sender, EventArgs e)
         {
+            this.Hide(); // Formu gizler
+
             // TarifEkleForm'u Form1 referansý ile aç
             TarifEkleForm tarifEkleForm = new TarifEkleForm(this); // Form1 referansýný geçiyoruz
             tarifEkleForm.ShowDialog(); // Modal olarak açýyoruz
@@ -273,10 +255,12 @@ namespace YemekTarifiUygulamasi
 
                             // Resmi yükle
                             Image tarifImage = null;
-                            if (!string.IsNullOrEmpty(gorselAdi) && System.IO.File.Exists(gorselAdi))
+                            string imagePath = Path.Combine(Application.StartupPath, "Images", gorselAdi);
+                            if (!string.IsNullOrEmpty(gorselAdi) && File.Exists(imagePath))
                             {
-                                tarifImage = Image.FromFile(gorselAdi);
+                                tarifImage = Image.FromFile(imagePath);
                             }
+
 
                             // Verileri DataGridView'e ekle
                             int rowIndex = dataGridViewTarifler.Rows.Add(tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
@@ -307,6 +291,7 @@ namespace YemekTarifiUygulamasi
                 }
             }
         }
+
 
 
 

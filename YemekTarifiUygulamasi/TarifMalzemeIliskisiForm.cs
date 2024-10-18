@@ -90,10 +90,14 @@ namespace YemekTarifiUygulamasi
 
             MessageBox.Show("Malzemeler başarıyla kaydedildi.");
 
-            // Formu kapatmadan önce Form1'deki tarifleri güncelle
+            
+            this.Hide(); // Formu gizler
 
-            this.Close(); // Formu kapat
+            form1.Show();
+
+            // Formu kapat
         }
+
 
         private void TarifMalzemeIliskisiForm_Load(object sender, EventArgs e)
         {

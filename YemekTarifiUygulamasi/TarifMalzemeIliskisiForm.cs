@@ -11,10 +11,12 @@ namespace YemekTarifiUygulamasi
         string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
         private int tarifId;
         private List<Tuple<int, string, float>> malzemeler = new List<Tuple<int, string, float>>();
+        private Form1 form1; // Form1 referansını ekliyoruz
 
-        public TarifMalzemeIliskisiForm(int tarifId)
+        public TarifMalzemeIliskisiForm(Form1 parentForm, int tarifId)
         {
             InitializeComponent();
+            this.form1 = parentForm;  // Form1 referansını alıyoruz
             this.tarifId = tarifId;
             LoadMalzeme();
         }
@@ -49,7 +51,6 @@ namespace YemekTarifiUygulamasi
                 var existingMalzeme = malzemeler.Find(m => m.Item1 == malzemeId);
                 if (existingMalzeme != null)
                 {
-                    // Malzeme zaten eklenmiş, miktarı güncelle
                     MessageBox.Show("Bu malzeme zaten eklenmiş. Miktarı güncellemek için tabloyu düzenleyebilirsiniz.");
                     return;
                 }
@@ -88,9 +89,10 @@ namespace YemekTarifiUygulamasi
             }
 
             MessageBox.Show("Malzemeler başarıyla kaydedildi.");
+
+            // Formu kapatmadan önce Form1'deki tarifleri güncelle
+
             this.Close(); // Formu kapat
-            Form1 form1 = new Form1();
-            form1.Show();
         }
 
         private void TarifMalzemeIliskisiForm_Load(object sender, EventArgs e)
@@ -114,17 +116,24 @@ namespace YemekTarifiUygulamasi
                 if (e.ColumnIndex == dataGridViewMalzemeler.Columns["btnDelete"].Index && e.RowIndex >= 0)
                 {
                     var malzemeAdi = dataGridViewMalzemeler.Rows[e.RowIndex].Cells[0].Value.ToString();
-                    var miktar = (float)dataGridViewMalzemeler.Rows[e.RowIndex].Cells[1].Value;
 
-                    // Listeden malzemeyi kaldır
-                    malzemeler.RemoveAll(m => m.Item2 == malzemeAdi && m.Item3 == miktar);
+                    // Miktarı stringten float'a dönüştürürken try-catch kullanmak
+                    if (float.TryParse(dataGridViewMalzemeler.Rows[e.RowIndex].Cells[1].Value.ToString(), out float miktar))
+                    {
+                        // Listeden malzemeyi kaldır
+                        malzemeler.RemoveAll(m => m.Item2 == malzemeAdi && m.Item3 == miktar);
 
-                    // DataGridView'den satırı sil
-                    dataGridViewMalzemeler.Rows.RemoveAt(e.RowIndex);
+                        // DataGridView'den satırı sil
+                        dataGridViewMalzemeler.Rows.RemoveAt(e.RowIndex);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Miktar verisi geçerli değil.");
+                    }
                 }
             };
         }
-
-      
     }
+
 }
+

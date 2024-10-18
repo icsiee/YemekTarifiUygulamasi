@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.IO;
 
 namespace YemekTarifiUygulamasi
 {
@@ -31,7 +32,18 @@ namespace YemekTarifiUygulamasi
                     {
                         lblTarifAdi.Text = reader.GetString("TarifAdi"); // Tarif adını ekle
                         txtTalimatlar.Text = reader.GetString("Talimatlar"); // Talimatları ekle
-                        pictureBoxTarif.ImageLocation = reader.GetString("GorselAdi"); // Resmi göster
+
+                        // Görselin projenin Images klasöründen yüklenmesi
+                        string imageFileName = reader.GetString("GorselAdi");
+                        string imagePath = Path.Combine(Application.StartupPath, "Images", imageFileName);
+                        if (File.Exists(imagePath))
+                        {
+                            pictureBoxTarif.ImageLocation = imagePath; // Resmi göster
+                        }
+                        else
+                        {
+                            MessageBox.Show("Görsel bulunamadı.");
+                        }
                     }
                 }
             }

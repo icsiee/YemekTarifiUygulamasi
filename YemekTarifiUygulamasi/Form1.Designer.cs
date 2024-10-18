@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+
             btnMalzemeEkle = new Button();
             btnTarifEkle = new Button();
             dataGridViewTarifler = new DataGridView();
@@ -156,7 +157,15 @@
             // cmbFiltrele
             // 
             cmbFiltrele.FormattingEnabled = true;
-            cmbFiltrele.Items.AddRange(new object[] { "Tüm Tarifler", "Hızlı Tarifler", "Özel Tarifler" });
+            cmbFiltrele.Items.AddRange(new object[] {
+    "Atıştırmalıklar",
+    "Tatlılar",
+    "İçecekler",
+    "Sebze Yemekleri",
+    "Kahvaltılıklar",
+    "Ana Yemekler",
+    "Tümü"
+});
             cmbFiltrele.Location = new Point(310, 12);
             cmbFiltrele.Name = "cmbFiltrele";
             cmbFiltrele.Size = new Size(150, 28);

@@ -8,6 +8,8 @@ namespace YemekTarifiUygulamasi
 {
     public partial class Form1 : Form
     {
+
+
         public Form1()
         {
             InitializeComponent();
@@ -53,6 +55,11 @@ namespace YemekTarifiUygulamasi
             // Mouse olaylarýný yakalamak için event handler ekleyelim
             dataGridViewTarifler.CellMouseEnter += DataGridViewTarifler_CellMouseEnter;
             dataGridViewTarifler.CellMouseLeave += DataGridViewTarifler_CellMouseLeave;
+
+            cmbFiltrele.SelectedIndexChanged += cmbFiltrele_SelectedIndexChanged;
+            this.KeyPreview = true;
+            this.KeyDown += new KeyEventHandler(Form1_KeyDown);
+
 
             // Form yüklendiðinde tarifleri yükle
             LoadTarifler();
@@ -115,7 +122,7 @@ namespace YemekTarifiUygulamasi
 
                                 // EksikMaliyet sütununa veri ekle
                                 var row = dataGridViewTarifler.Rows[rowIndex];
-                                row.Cells["EksikMaliyet"].Value = eksikMaliyet.HasValue ? eksikMaliyet.Value.ToString("C") : "Maliyet Yok";
+                                row.Cells["EksikMaliyet"].Value = eksikMaliyet.HasValue ? eksikMaliyet.Value.ToString("C") : "Eksik Maliyet Yok";
 
                                 // Tarifin durumuna göre renk ayarla
                                 if (eksikMaliyet.HasValue)
@@ -145,6 +152,27 @@ namespace YemekTarifiUygulamasi
             }
         }
 
+        // Yeni tarifi eklemek için Form1'de bir fonksiyon
+        public void AddNewTarifToGrid(int tarifId, string tarifAdi, int hazirlamaSuresi, string gorselAdi)
+        {
+            Image tarifImage = null;
+            string imagePath = Path.Combine(Application.StartupPath, "Images", gorselAdi);
+            if (!string.IsNullOrEmpty(gorselAdi) && File.Exists(imagePath))
+            {
+                tarifImage = Image.FromFile(imagePath);
+            }
+
+            // Yeni tarifi DataGridView'e ekle
+            int rowIndex = dataGridViewTarifler.Rows.Add(tarifImage, tarifId, tarifAdi, hazirlamaSuresi, 0);
+
+            // Eksik Maliyet bilgisi ekleyebilirsiniz (örneðin, "Eksik Maliyet Yok" diyebilirsiniz)
+            var row = dataGridViewTarifler.Rows[rowIndex];
+            row.Cells["EksikMaliyet"].Value = "Eksik Maliyet Yok";
+
+            // Yeni eklenen tarife özel stil ayarý
+            row.DefaultCellStyle.BackColor = Color.Green; // Eklenen tariflerin arka planý yeþil
+        }
+
 
         private void ShowTarifDetails(long tarifId)
         {
@@ -158,10 +186,20 @@ namespace YemekTarifiUygulamasi
             malzemeEkleForm.ShowDialog(); // Formu modal olarak aç
         }
 
+        private void cmbFiltrele_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string aramaKriteri = txtAra.Text.Trim();
+            string filtreKriteri = cmbFiltrele.SelectedItem?.ToString();
+
+            LoadTarifler(aramaKriteri, filtreKriteri); // Tarife yükleme fonksiyonunu çaðýr
+        }
+
+
         private void btnTarifEkle_Click(object sender, EventArgs e)
         {
-            TarifEkleForm tarifEkleForm = new TarifEkleForm();
-            tarifEkleForm.ShowDialog(); // Formu modal olarak aç
+            // TarifEkleForm'u Form1 referansý ile aç
+            TarifEkleForm tarifEkleForm = new TarifEkleForm(this); // Form1 referansýný geçiyoruz
+            tarifEkleForm.ShowDialog(); // Modal olarak açýyoruz
         }
 
         private void btnAra_Click(object sender, EventArgs e)
@@ -172,6 +210,7 @@ namespace YemekTarifiUygulamasi
             LoadTarifler(aramaKriteri, filtreKriteri); // Tarife yükleme fonksiyonunu çaðýr
         }
 
+
         private void LoadTarifler(string aramaKriteri, string filtreKriteri)
         {
             string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
@@ -181,28 +220,28 @@ namespace YemekTarifiUygulamasi
                 {
                     connection.Open();
                     string query = @"
-                SELECT 
-                    t.TarifID, 
-                    t.TarifAdi, 
-                    t.HazirlamaSuresi, 
-                    SUM(m.BirimFiyat * tm.Malzememiktar) AS ToplamMaliyet, 
-                    t.GorselAdi,
-                    (SELECT SUM(m2.BirimFiyat * (tm2.Malzememiktar - m2.ToplamMiktar))
-                     FROM malzemeler m2
-                     JOIN tarifmalzemeiliskisi tm2 ON m2.MalzemeID = tm2.MalzemeID
-                     WHERE tm2.TarifID = t.TarifID AND m2.ToplamMiktar < tm2.Malzememiktar) AS EksikMaliyet
-                FROM 
-                    tarifler t
-                LEFT JOIN 
-                    tarifmalzemeiliskisi tm ON t.TarifID = tm.TarifID
-                LEFT JOIN 
-                    malzemeler m ON tm.MalzemeID = m.MalzemeID
-                WHERE 
-                    t.TarifAdi LIKE @aramaKriteri";
+            SELECT 
+                t.TarifID, 
+                t.TarifAdi, 
+                t.HazirlamaSuresi, 
+                SUM(m.BirimFiyat * tm.Malzememiktar) AS ToplamMaliyet, 
+                t.GorselAdi,
+                (SELECT SUM(m2.BirimFiyat * (tm2.Malzememiktar - m2.ToplamMiktar))
+                 FROM malzemeler m2
+                 JOIN tarifmalzemeiliskisi tm2 ON m2.MalzemeID = tm2.MalzemeID
+                 WHERE tm2.TarifID = t.TarifID AND m2.ToplamMiktar < tm2.Malzememiktar) AS EksikMaliyet
+            FROM 
+                tarifler t
+            LEFT JOIN 
+                tarifmalzemeiliskisi tm ON t.TarifID = tm.TarifID
+            LEFT JOIN 
+                malzemeler m ON tm.MalzemeID = m.MalzemeID
+            WHERE 
+                t.TarifAdi LIKE @aramaKriteri";
 
-                    if (filtreKriteri != null && filtreKriteri != "Tüm Tarifler")
+                    if (filtreKriteri != null && filtreKriteri != "Tümü")
                     {
-                        query += " AND t.Kategori = @filtreKriteri"; // Örnek: Kategori filtresi
+                        query += " AND t.Kategori = @filtreKriteri"; // Kategoriye göre filtreleme
                     }
 
                     query += " GROUP BY t.TarifID, t.TarifAdi, t.HazirlamaSuresi, t.GorselAdi";
@@ -210,12 +249,12 @@ namespace YemekTarifiUygulamasi
                     MySqlCommand command = new MySqlCommand(query, connection);
                     command.Parameters.AddWithValue("@aramaKriteri", "%" + aramaKriteri + "%");
 
-                    if (filtreKriteri != null && filtreKriteri != "Tüm Tarifler")
+                    if (filtreKriteri != null && filtreKriteri != "Tümü")
                     {
                         command.Parameters.AddWithValue("@filtreKriteri", filtreKriteri);
                     }
 
-                    // DataGridView'i temizleyelim
+                    // DataGridView'i temizle
                     dataGridViewTarifler.Rows.Clear();
 
                     using (MySqlDataReader reader = command.ExecuteReader())
@@ -236,7 +275,7 @@ namespace YemekTarifiUygulamasi
                                 tarifImage = Image.FromFile(gorselAdi);
                             }
 
-                            // Verileri DataGridView'e ekleyelim
+                            // Verileri DataGridView'e ekle
                             int rowIndex = dataGridViewTarifler.Rows.Add(tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
 
                             // EksikMaliyet sütununa veri ekle
@@ -267,6 +306,7 @@ namespace YemekTarifiUygulamasi
         }
 
 
+
         // Fare ile üzerine gelindiðinde yazýyý beyaza döndür
         private void DataGridViewTarifler_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
         {
@@ -290,6 +330,15 @@ namespace YemekTarifiUygulamasi
                 {
                     cell.Style.ForeColor = Color.Black; // Yazýyý tekrar siyaha döndür
                 }
+            }
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) // Enter tuþuna basýldýðýnda
+            {
+                btnAra.PerformClick(); // Ara butonuna týkla (fonksiyonu çaðýr)
+                e.Handled = true; // Tuþ olayýný iþlediðimizi belirtiyoruz
             }
         }
 

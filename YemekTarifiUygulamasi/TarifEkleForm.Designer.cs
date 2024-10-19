@@ -147,7 +147,7 @@
             // 
             // btnMaddeEkle
             // 
-            btnMaddeEkle.Location = new Point(355, 190);
+            btnMaddeEkle.Location = new Point(307, 156);
             btnMaddeEkle.Name = "btnMaddeEkle";
             btnMaddeEkle.Size = new Size(40, 29);
             btnMaddeEkle.TabIndex = 14;
@@ -182,6 +182,7 @@
             Controls.Add(label1);
             Name = "TarifEkleForm";
             Text = "TarifEkleForm";
+            FormClosing += TarifEkleForm_FormClosing;
             ((System.ComponentModel.ISupportInitialize)pbGorsel).EndInit();
             ResumeLayout(false);
             PerformLayout();

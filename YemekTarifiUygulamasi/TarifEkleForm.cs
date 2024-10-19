@@ -10,11 +10,10 @@ namespace YemekTarifiUygulamasi
     public partial class TarifEkleForm : Form
     {
         private Form1 form1; // Form1 referansı
-
         string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
         private string selectedImagePath = string.Empty; // Seçilen görselin dosya yolu
-
-        public TarifEkleForm(Form1 form1) // Form1 referansı parametre olarak alınıyor
+        private MalzemeEkleForm malzemeEkleForm;
+        public TarifEkleForm(Form1 form1, MalzemeEkleForm malzemeEkleForm) // Form1 referansı parametre olarak alınıyor
         {
             InitializeComponent();
             this.form1 = form1; // Form1 referansını ayarlıyoruz
@@ -22,6 +21,7 @@ namespace YemekTarifiUygulamasi
             lstTalimatlar.ScrollAlwaysVisible = true; // Kaydırma çubuğunu her zaman görünür yap
             lstTalimatlar.HorizontalScrollbar = true;
             pbGorsel.Click += pbGorsel_Click;  // Görsel seçim işlemi için tıklama olayını bağla
+            this.malzemeEkleForm = malzemeEkleForm;
         }
 
         private void LoadCategories()
@@ -95,6 +95,7 @@ namespace YemekTarifiUygulamasi
                         this.Close(); // Formu kapat
                         this.Hide(); // Formu gizler
 
+                        form1.Hide();
                         malzemeIliskisiForm.ShowDialog();
 
                         ClearForm(); // Formu temizle
@@ -113,7 +114,7 @@ namespace YemekTarifiUygulamasi
                 MessageBox.Show("Lütfen tüm alanları doldurun ve bir görsel seçin.");
             }
 
-            
+
 
 
         }
@@ -163,6 +164,11 @@ namespace YemekTarifiUygulamasi
 
             // Kaynakları serbest bırakın
             pen.Dispose();
+        }
+
+        private void TarifEkleForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            form1.Show();
         }
     }
 }

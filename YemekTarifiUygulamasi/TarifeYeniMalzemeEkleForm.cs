@@ -1,27 +1,26 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient; // MySQL için ADO.NET kütüphanesi
 
 namespace YemekTarifiUygulamasi
 {
-    public partial class YeniMalzemeEkleForm : Form
+    public partial class TarifeYeniMalzemeEkleForm : Form
     {
-        public event EventHandler MalzemeEklendi;
-
         string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
-        private Form1 form1; // Form1 referansı
-        private MalzemeEkleForm malzemeEkleForm;
+        private TarifMalzemeIliskisiForm tarifMalzemeIliskisiForm;
+        public Tuple<int, string, float> MalzemeBilgileri { get; private set; }
 
-        public YeniMalzemeEkleForm(Form1 form1, MalzemeEkleForm malzemeEkleForm)
+        public TarifeYeniMalzemeEkleForm(TarifMalzemeIliskisiForm parentForm)
         {
-            InitializeComponent();
+            InitializeComponent(); // İlk önce bileşenleri başlat
+            this.tarifMalzemeIliskisiForm = parentForm;
+
+            // Birimleri cmbBirim'e ekle
             cmbBirim.Items.Add("Kilogram");
             cmbBirim.Items.Add("Gram");
             cmbBirim.Items.Add("Litre");
-            this.form1 = form1;
-            this.malzemeEkleForm = malzemeEkleForm;
         }
-
 
         private float ConvertToGrams(float miktar, string birim)
         {
@@ -32,7 +31,6 @@ namespace YemekTarifiUygulamasi
                 case "Gram":
                     return miktar; // 1 gram = 1 gram
                 case "Litre":
-                    // Litreyi gram cinsine çevirmek için yoğunluk bilgisi gerekiyor, örnek olarak 1 litre su 1000 gramdır
                     return miktar * 1000; // 1 litre su = 1000 gram
                 default:
                     throw new ArgumentException("Geçersiz birim.");
@@ -41,14 +39,23 @@ namespace YemekTarifiUygulamasi
 
 
 
-        private void btnEkle_Click(object sender, EventArgs e)
+        private void btnIptal_Click_1(object sender, EventArgs e)
         {
+            this.Hide();
+            tarifMalzemeIliskisiForm.Show();
+        }
+
+
+        private void btnEkle_Click_1(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.OK; // Formu OK olarak kapat
+
             string malzemeAdi = txtMalzemeAdi.Text.Trim();
             string birim = cmbBirim.SelectedItem?.ToString(); // null kontrolü yapıldı
-            float miktar;
+            float miktar; // Tarif için kullanılacak miktar
             decimal birimFiyat;
 
-            // Kontroller
+            // Eksik alanları kontrol et
             List<string> eksikAlanlar = new List<string>();
 
             if (string.IsNullOrEmpty(malzemeAdi))
@@ -78,14 +85,10 @@ namespace YemekTarifiUygulamasi
                 return;
             }
 
-            // Miktar ve birim fiyatı kontrolü
-            if (!float.TryParse(txtMiktar.Text.Trim(), out miktar) || !decimal.TryParse(txtBirimFiyat.Text.Trim(), out birimFiyat))
-            {
-                MessageBox.Show("Lütfen geçerli bir miktar ve birim fiyatı girin.");
-                return;
-            }
+            // Miktarı grama çevir
+            float miktarGrams = ConvertToGrams(miktar, birim);
 
-            // Malzeme adının veritabanında olup olmadığını kontrol et
+            // Malzeme adının veritabanında olup olmadığını kontrol et ve ekle
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
@@ -99,46 +102,42 @@ namespace YemekTarifiUygulamasi
                     {
                         MessageBox.Show("Bu malzeme zaten mevcut.");
                         return;
-                        this.Close();
-
                     }
                 }
 
-                // Miktarı gram cinsine çevir
-                float miktarGrama = ConvertToGrams(miktar, birim);
-
-                // Malzemeyi veritabanına ekle
+                // Malzeme bilgilerini veritabanına ekle
                 string insertQuery = "INSERT INTO Malzemeler (MalzemeAdi, ToplamMiktar, MalzemeBirim, BirimFiyat) VALUES (@malzemeAdi, @toplamMiktar, @malzemeBirim, @birimFiyat)";
                 using (MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn))
                 {
                     insertCmd.Parameters.AddWithValue("@malzemeAdi", malzemeAdi);
-                    insertCmd.Parameters.AddWithValue("@toplamMiktar", miktarGrama);
-                    insertCmd.Parameters.AddWithValue("@malzemeBirim", "Gram");
+                    insertCmd.Parameters.AddWithValue("@toplamMiktar", 0); // Yeni malzeme başlangıçta 0 miktar
+                    insertCmd.Parameters.AddWithValue("@malzemeBirim", "gram"); // Tüm birimler grama çevriliyor
                     insertCmd.Parameters.AddWithValue("@birimFiyat", birimFiyat);
                     insertCmd.ExecuteNonQuery();
                 }
 
+                // Yeni eklenen malzemenin ID'sini al
+                string idQuery = "SELECT LAST_INSERT_ID()"; // Son eklenen ID'yi al
+                using (MySqlCommand idCmd = new MySqlCommand(idQuery, conn))
+                {
+                    int malzemeId = Convert.ToInt32(idCmd.ExecuteScalar());
+
+                    // Yeni malzemeyi tarifte kullanılacak miktar ile birlikte set et
+                    MalzemeBilgileri = new Tuple<int, string, float>(malzemeId, malzemeAdi, miktarGrams);
+                }
+
+                // Başarılı ekleme mesajı
                 MessageBox.Show("Malzeme başarıyla eklendi.");
+
+                // Tarife eklenecek malzemeleri ComboBox'ta güncelle
+                tarifMalzemeIliskisiForm.LoadMalzeme();
             }
 
-            MalzemeEklendi?.Invoke(this, EventArgs.Empty);
-
-            this.Close();
-            form1.Show();
-
-        }
-
-        private void btnIptal_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            malzemeEkleForm.Show();
+            this.Hide(); // Formu kapat
+            tarifMalzemeIliskisiForm.Show();
         }
 
 
-            
-        private void YeniMalzemeEkleForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            form1.Show();
-        }
+
     }
 }

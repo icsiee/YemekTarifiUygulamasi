@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MalzemeEkleForm));
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
@@ -140,7 +139,6 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(582, 553);
             Controls.Add(btnYeniMalzemeEkle);
@@ -154,6 +152,7 @@
             Controls.Add(label1);
             Name = "MalzemeEkleForm";
             Text = "MalzemeEkleForm";
+            FormClosing += MalzemeEkleForm_FormClosing_1;
             ResumeLayout(false);
             PerformLayout();
         }

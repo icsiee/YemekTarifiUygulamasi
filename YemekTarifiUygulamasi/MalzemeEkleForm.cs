@@ -122,7 +122,7 @@ namespace YemekTarifiUygulamasi
             }
             this.Close();
             form1.Show();
-            
+
         }
 
         private void btnIptal_Click(object sender, EventArgs e)
@@ -133,9 +133,9 @@ namespace YemekTarifiUygulamasi
 
         private void btnYeniMalzemeEkle_Click_1(object sender, EventArgs e)
         {
-            
+
             this.Hide();
-            YeniMalzemeEkleForm yeniMalzemeEkleForm = new YeniMalzemeEkleForm(form1,this);
+            YeniMalzemeEkleForm yeniMalzemeEkleForm = new YeniMalzemeEkleForm(form1, this);
 
             // Olay dinleyicisi ekleyin
             yeniMalzemeEkleForm.MalzemeEklendi += YeniMalzemeEklendi;
@@ -168,6 +168,12 @@ namespace YemekTarifiUygulamasi
                 // Boşsa yeniden tüm malzemeleri yükle
                 LoadMalzemeler();
             }
+        }
+
+
+        private void MalzemeEkleForm_FormClosing_1(object sender, FormClosingEventArgs e)
+        {
+            form1.Show();
         }
     }
 }

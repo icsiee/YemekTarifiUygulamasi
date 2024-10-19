@@ -8,12 +8,14 @@ namespace YemekTarifiUygulamasi
     public partial class TarifDetayForm : Form
     {
         private long tarifId;
+        private Form1 form1;
 
-        public TarifDetayForm(long tarifId)
+        public TarifDetayForm(long tarifId, Form1 form1)
         {
             InitializeComponent();
             this.tarifId = tarifId; // Parametre olarak gelen tarifId'yi sakla
             LoadTarifDetails(); // Detayları yükle
+            this.form1 = form1;
         }
 
         private void LoadTarifDetails()
@@ -47,6 +49,12 @@ namespace YemekTarifiUygulamasi
                     }
                 }
             }
+        }
+
+        private void TarifDetayForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            form1.Show(); // form1 referansını kullanarak tekrar göster
+
         }
     }
 }

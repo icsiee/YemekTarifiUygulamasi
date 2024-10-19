@@ -18,11 +18,36 @@ namespace YemekTarifiUygulamasi
             InitializeComponent();
             this.form1 = parentForm;  // Form1 referansını alıyoruz
             this.tarifId = tarifId;
-            LoadMalzeme();
+
+            InitializeDataGridView(); // DataGridView'i başlat
+            LoadMalzeme();            // Malzemeleri yükle
+
+            // CellClick olayını ekleyelim
+            dataGridViewMalzemeler.CellClick += new DataGridViewCellEventHandler(dataGridViewMalzemeler_CellClick);
         }
 
-        private void LoadMalzeme()
+
+
+        private void InitializeDataGridView()
         {
+            dataGridViewMalzemeler.Columns.Clear(); // Mevcut sütunları temizle
+            dataGridViewMalzemeler.Columns.Add("MalzemeAdi", "Malzeme Adı");
+            dataGridViewMalzemeler.Columns.Add("Miktar", "Miktar (gram)");
+
+            // Sil buton sütunu ekleyelim
+            DataGridViewButtonColumn btnSil = new DataGridViewButtonColumn();
+            btnSil.HeaderText = "Sil"; // Sütun başlığı
+            btnSil.Name = "btnSil";    // Buton sütununun ismi
+            btnSil.Text = "Sil";       // Her hücrede görünecek yazı
+            btnSil.UseColumnTextForButtonValue = true; // Her hücrede "Sil" yazısı olsun
+            dataGridViewMalzemeler.Columns.Add(btnSil); // Sütunu ekle
+        }
+
+
+        // LoadMalzeme metodu, ComboBox'a eklemeler için
+        public void LoadMalzeme()
+        {
+            cmbMalzeme.Items.Clear(); // Yeni malzemeyi görebilmek için önce temizle
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 connection.Open();
@@ -38,6 +63,43 @@ namespace YemekTarifiUygulamasi
             cmbMalzeme.DisplayMember = "Name";
             cmbMalzeme.ValueMember = "ID";
         }
+
+        private void btnSil_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewMalzemeler.CurrentRow != null)
+            {
+                // Kullanıcıdan silme işlemi için onay alalım
+                DialogResult dialogResult = MessageBox.Show("Seçili malzemeyi silmek istediğinizden emin misiniz?", "Onay", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    int index = dataGridViewMalzemeler.CurrentRow.Index;
+
+                    // İlgili malzemeyi listeden çıkar
+                    var silinenMalzeme = malzemeler[index];
+                    malzemeler.RemoveAt(index);
+
+                    // DataGridView'den sil
+                    dataGridViewMalzemeler.Rows.RemoveAt(index);
+
+                    // Eğer veritabanında da kayıtlıysa, veritabanından sil
+                    using (MySqlConnection connection = new MySqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        MySqlCommand command = new MySqlCommand("DELETE FROM tarifmalzemeiliskisi WHERE TarifID = @tarifId AND MalzemeID = @malzemeId", connection);
+                        command.Parameters.AddWithValue("@tarifId", tarifId);
+                        command.Parameters.AddWithValue("@malzemeId", silinenMalzeme.Item1);
+                        command.ExecuteNonQuery();
+                    }
+
+                    MessageBox.Show("Malzeme başarıyla silindi.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Silmek için bir malzeme seçin.");
+            }
+        }
+
 
         private void btnEkleMalzeme_Click_1(object sender, EventArgs e)
         {
@@ -80,64 +142,73 @@ namespace YemekTarifiUygulamasi
                 // Tüm malzemeleri veritabanına kaydet
                 foreach (var malzeme in malzemeler)
                 {
-                    MySqlCommand command = new MySqlCommand("INSERT INTO tarifmalzemeiliskisi (TarifID, MalzemeID, MalzemeMiktar) VALUES (@TarifID, @MalzemeID, @MalzemeMiktar)", connection);
-                    command.Parameters.AddWithValue("@TarifID", tarifId);
-                    command.Parameters.AddWithValue("@MalzemeID", malzeme.Item1);
-                    command.Parameters.AddWithValue("@MalzemeMiktar", malzeme.Item3);
+                    MySqlCommand command = new MySqlCommand("INSERT INTO tarifmalzemeiliskisi (TarifID, MalzemeID, MalzemeMiktar) VALUES (@tarifId, @malzemeId, @miktar)", connection);
+                    command.Parameters.AddWithValue("@tarifId", tarifId);
+                    command.Parameters.AddWithValue("@malzemeId", malzeme.Item1);
+                    command.Parameters.AddWithValue("@miktar", malzeme.Item3);
                     command.ExecuteNonQuery();
                 }
             }
 
-            MessageBox.Show("Malzemeler başarıyla kaydedildi.");
-
-            
-            this.Hide(); // Formu gizler
-
-            form1.Show();
-
-            // Formu kapat
+            MessageBox.Show("Malzeme ilişkileri kaydedildi.");
+            this.Close(); // Formu kapat
+            form1.Show(); // Form1'i tekrar göster
         }
 
-
-        private void TarifMalzemeIliskisiForm_Load(object sender, EventArgs e)
+        private void btnYeniMalzemeEkle_Click(object sender, EventArgs e)
         {
-            // DataGridView'e sütun ekle
-            dataGridViewMalzemeler.ColumnCount = 3; // Üç sütun ekliyoruz
-            dataGridViewMalzemeler.Columns[0].Name = "Malzeme"; // İlk sütun malzeme adı
-            dataGridViewMalzemeler.Columns[1].Name = "Miktar";  // İkinci sütun malzeme miktarı
-            dataGridViewMalzemeler.Columns[2].Name = "İşlem";   // Üçüncü sütun silme işlemi için buton olacak
-
-            // İşlem butonları ekle
-            DataGridViewButtonColumn deleteButton = new DataGridViewButtonColumn();
-            deleteButton.Name = "btnDelete";
-            deleteButton.Text = "Sil";
-            deleteButton.UseColumnTextForButtonValue = true;
-            dataGridViewMalzemeler.Columns.Add(deleteButton);
-
-            // DataGridView satır silme işlemi
-            dataGridViewMalzemeler.CellClick += (s, e) =>
+            TarifeYeniMalzemeEkleForm yeniMalzemeForm = new TarifeYeniMalzemeEkleForm(this);
+            this.Hide();
+            if (yeniMalzemeForm.ShowDialog() == DialogResult.OK)
             {
-                if (e.ColumnIndex == dataGridViewMalzemeler.Columns["btnDelete"].Index && e.RowIndex >= 0)
+                
+                // Yeni malzeme eklendikten sonra bilgileri alalım
+                var malzemeBilgileri = yeniMalzemeForm.MalzemeBilgileri;
+
+                if (malzemeBilgileri != null)
                 {
-                    var malzemeAdi = dataGridViewMalzemeler.Rows[e.RowIndex].Cells[0].Value.ToString();
-
-                    // Miktarı stringten float'a dönüştürürken try-catch kullanmak
-                    if (float.TryParse(dataGridViewMalzemeler.Rows[e.RowIndex].Cells[1].Value.ToString(), out float miktar))
-                    {
-                        // Listeden malzemeyi kaldır
-                        malzemeler.RemoveAll(m => m.Item2 == malzemeAdi && m.Item3 == miktar);
-
-                        // DataGridView'den satırı sil
-                        dataGridViewMalzemeler.Rows.RemoveAt(e.RowIndex);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Miktar verisi geçerli değil.");
-                    }
+                    // Yeni malzeme bilgilerini alalım (ID, malzeme adı, tarifte kullanılacak miktar)
+                    malzemeler.Add(malzemeBilgileri); // Listeye ekle
+                    dataGridViewMalzemeler.Rows.Add(malzemeBilgileri.Item2, malzemeBilgileri.Item3); // DataGridView'e ekle
                 }
-            };
+            }
         }
+
+        private void dataGridViewMalzemeler_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Eğer tıklanan hücre sil butonuna aitse
+            if (e.ColumnIndex == dataGridViewMalzemeler.Columns["btnSil"].Index && e.RowIndex >= 0)
+            {
+                // Silme işlemi için kullanıcıdan onay alalım
+                DialogResult dialogResult = MessageBox.Show("Seçili malzemeyi silmek istediğinizden emin misiniz?", "Onay", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    // Satır indeksini alalım
+                    int rowIndex = e.RowIndex;
+
+                    // İlgili malzemeyi listeden çıkaralım
+                    var silinenMalzeme = malzemeler[rowIndex];
+                    malzemeler.RemoveAt(rowIndex);
+
+                    // DataGridView'den satırı kaldıralım
+                    dataGridViewMalzemeler.Rows.RemoveAt(rowIndex);
+
+                    // Eğer veritabanında da kayıtlıysa, veritabanından sil
+                    using (MySqlConnection connection = new MySqlConnection(connectionString))
+                    {
+                        connection.Open();
+                        MySqlCommand command = new MySqlCommand("DELETE FROM tarifmalzemeiliskisi WHERE TarifID = @tarifId AND MalzemeID = @malzemeId", connection);
+                        command.Parameters.AddWithValue("@tarifId", tarifId);
+                        command.Parameters.AddWithValue("@malzemeId", silinenMalzeme.Item1);
+                        command.ExecuteNonQuery();
+                    }
+
+                    MessageBox.Show("Malzeme başarıyla silindi.");
+                }
+            }
+        }
+
+
+
     }
-
 }
-

@@ -9,7 +9,7 @@ namespace YemekTarifiUygulamasi
     public partial class Form1 : Form
     {
         string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234";
-
+        private MalzemeEkleForm malzemeEkleForm;
 
         public Form1()
         {
@@ -60,7 +60,7 @@ namespace YemekTarifiUygulamasi
             this.KeyPreview = true;
             this.KeyDown += new KeyEventHandler(Form1_KeyDown);
 
-
+            malzemeEkleForm = new MalzemeEkleForm(this);
 
 
             // Form yüklendiðinde tarifleri yükle
@@ -157,7 +157,7 @@ namespace YemekTarifiUygulamasi
 
         private void ShowTarifDetails(long tarifId)
         {
-            TarifDetayForm detayForm = new TarifDetayForm(tarifId);
+            TarifDetayForm detayForm = new TarifDetayForm(tarifId, this);
             detayForm.ShowDialog(); // Modal olarak detay formunu aç
         }
 
@@ -166,7 +166,7 @@ namespace YemekTarifiUygulamasi
             this.Hide();
             MalzemeEkleForm malzemeEkleForm = new MalzemeEkleForm(this);
             malzemeEkleForm.ShowDialog(); // Formu modal olarak aç
-            
+
         }
 
         private void cmbFiltrele_SelectedIndexChanged(object sender, EventArgs e)
@@ -183,7 +183,7 @@ namespace YemekTarifiUygulamasi
             this.Hide(); // Formu gizler
 
             // TarifEkleForm'u Form1 referansý ile aç
-            TarifEkleForm tarifEkleForm = new TarifEkleForm(this); // Form1 referansýný geçiyoruz
+            TarifEkleForm tarifEkleForm = new TarifEkleForm(this, malzemeEkleForm); // Form1 referansýný geçiyoruz
             tarifEkleForm.ShowDialog(); // Modal olarak açýyoruz
         }
 
@@ -348,13 +348,16 @@ namespace YemekTarifiUygulamasi
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
             LoadTarifler();
         }
 
-        // MySQL baðlantý dizesini ayarlayýn
 
+       
+        private void Form1_FormClosing_1(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
 
-
+        }
     }
 }

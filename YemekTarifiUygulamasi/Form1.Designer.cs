@@ -184,6 +184,7 @@
             Controls.Add(btnMalzemeEkle);
             Name = "Form1";
             Text = "Yemek Tarifleri Uygulaması";
+            FormClosing += Form1_FormClosing_1;
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridViewTarifler).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxYenile).EndInit();

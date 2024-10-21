@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.IO;
+using System.Diagnostics;
 
 namespace YemekTarifiUygulamasi
 {
@@ -51,10 +52,6 @@ namespace YemekTarifiUygulamasi
             }
         }
 
-        private void TarifDetayForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            form1.Show(); // form1 referansını kullanarak tekrar göster
-
-        }
+        
     }
 }

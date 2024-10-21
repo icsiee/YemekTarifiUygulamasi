@@ -80,7 +80,7 @@
             dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewTarifler.Size = new Size(776, 441);
             dataGridViewTarifler.TabIndex = 0;
-            dataGridViewTarifler.CellContentDoubleClick += dataGridViewTarifler_CellContentDoubleClick;
+            dataGridViewTarifler.CellContentClick += dataGridViewTarifler_CellContentClick;
             // 
             // TarifID
             // 

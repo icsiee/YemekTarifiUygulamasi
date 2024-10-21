@@ -10,6 +10,7 @@ namespace YemekTarifiUygulamasi
     {
         string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234";
         private MalzemeEkleForm malzemeEkleForm;
+        private TarifDetayForm tarifDetayForm;
 
         public Form1()
         {
@@ -33,6 +34,10 @@ namespace YemekTarifiUygulamasi
 
             dataGridViewTarifler.Columns.Add(tarifIdColumn);
 
+            dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.CellSelect; // Sadece hücreler seçilebilir, satýr seçimi kapalý
+            dataGridViewTarifler.MultiSelect = false; // Çoklu hücre seçimi kapalý
+            dataGridViewTarifler.ClearSelection(); // Varsayýlan olarak seçili hücreleri kaldýr
+
             // Diðer sütunlarý ekle
             dataGridViewTarifler.Columns.Add("TarifAdi", "Tarif Adý");
             dataGridViewTarifler.Columns.Add("HazirlamaSuresi", "Hazýrlama Süresi (dk)");
@@ -46,15 +51,13 @@ namespace YemekTarifiUygulamasi
             // Diðer ayarlar
             dataGridViewTarifler.AllowUserToAddRows = false;
 
-            // Baþlangýçta hiçbir satýr seçili olmamasý için ClearSelection() kullan
-            dataGridViewTarifler.ClearSelection();
-
-            // Seçili satýr rengini kaldýr
-            dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.CellSelect;
-
-            // Mouse olaylarýný yakalamak için event handler ekleyelim
-            dataGridViewTarifler.CellMouseEnter += DataGridViewTarifler_CellMouseEnter;
-            dataGridViewTarifler.CellMouseLeave += DataGridViewTarifler_CellMouseLeave;
+            // DataGridView'e buton sütunu ekle
+            DataGridViewButtonColumn detayButtonColumn = new DataGridViewButtonColumn();
+            detayButtonColumn.Name = "Detay";
+            detayButtonColumn.HeaderText = "Detay Göster";
+            detayButtonColumn.Text = "Detay";
+            detayButtonColumn.UseColumnTextForButtonValue = true; // Buton üzerinde yazý gözüksün
+            dataGridViewTarifler.Columns.Add(detayButtonColumn);
 
             cmbFiltrele.SelectedIndexChanged += cmbFiltrele_SelectedIndexChanged;
             this.KeyPreview = true;
@@ -154,12 +157,24 @@ namespace YemekTarifiUygulamasi
             }
         }
 
-
-        private void ShowTarifDetails(long tarifId)
+        // DataGridView'in CellContentClick olayýný yakala
+        private void dataGridViewTarifler_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            TarifDetayForm detayForm = new TarifDetayForm(tarifId, this);
-            detayForm.ShowDialog(); // Modal olarak detay formunu aç
+            // Eðer týklanan hücre "Detay Göster" butonu ise
+            if (e.ColumnIndex == dataGridViewTarifler.Columns["Detay"].Index && e.RowIndex >= 0)
+            {
+                // Seçilen satýrdaki Tarif ID'sini al
+                long tarifId = Convert.ToInt64(dataGridViewTarifler.Rows[e.RowIndex].Cells["TarifID"].Value);
+                tarifDetayForm = new TarifDetayForm(tarifId, this);
+                tarifDetayForm.ShowDialog(); // Formu modal olarak aç
+                tarifDetayForm.Hide();
+            }
+
+
         }
+
+      
+
 
         private void btnMalzemeEkle_Click_1(object sender, EventArgs e)
         {
@@ -295,31 +310,7 @@ namespace YemekTarifiUygulamasi
 
 
 
-        // Fare ile üzerine gelindiðinde yazýyý beyaza döndür
-        private void DataGridViewTarifler_CellMouseEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0) // Geçerli bir satýr varsa
-            {
-                var row = dataGridViewTarifler.Rows[e.RowIndex];
-                foreach (DataGridViewCell cell in row.Cells)
-                {
-                    cell.Style.ForeColor = Color.White; // Yazýyý beyaza döndür
-                }
-            }
-        }
-
-        // Fare ile satýrdan ayrýldýðýnda yazýyý tekrar siyaha döndür
-        private void DataGridViewTarifler_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0) // Geçerli bir satýr varsa
-            {
-                var row = dataGridViewTarifler.Rows[e.RowIndex];
-                foreach (DataGridViewCell cell in row.Cells)
-                {
-                    cell.Style.ForeColor = Color.Black; // Yazýyý tekrar siyaha döndür
-                }
-            }
-        }
+       
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -330,15 +321,7 @@ namespace YemekTarifiUygulamasi
             }
         }
 
-        private void dataGridViewTarifler_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0) // Geçerli bir satýr seçildi mi kontrol et
-            {
-                // Seçilen satýrdaki Tarif ID'sini al
-                long tarifId = Convert.ToInt64(dataGridViewTarifler.Rows[e.RowIndex].Cells["TarifID"].Value);
-                ShowTarifDetails(tarifId); // Tarif detaylarýný göster
-            }
-        }
+       
 
 
         private void pictureBoxYenile_Click(object sender, EventArgs e)
@@ -353,11 +336,14 @@ namespace YemekTarifiUygulamasi
         }
 
 
-       
+
         private void Form1_FormClosing_1(object sender, FormClosingEventArgs e)
         {
             Application.Exit();
 
         }
+
+       
+
     }
 }

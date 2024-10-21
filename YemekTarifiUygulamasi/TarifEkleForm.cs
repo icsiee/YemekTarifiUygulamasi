@@ -59,24 +59,37 @@ namespace YemekTarifiUygulamasi
             {
                 try
                 {
-                    // Görseli belirttiğiniz dizine kaydetmek için dosya adını kullanıyoruz
-                    string imageFileName = Path.GetFileName(selectedImagePath);
-                    string imageSavePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", imageFileName);
-
-                    // Eğer dizin yoksa oluştur
-                    if (!Directory.Exists(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources"))
-                    {
-                        Directory.CreateDirectory(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources");
-                    }
-
-                    // Dosyayı hedef dizine kopyala
-                    File.Copy(selectedImagePath, imageSavePath, true);
-
                     using (MySqlConnection connection = new MySqlConnection(connectionString))
                     {
                         connection.Open();
 
-                        // Tarif ismi benzersiz olmasa bile eklemeye devam et
+                        // Önce veritabanında aynı isimde tarif olup olmadığını kontrol et
+                        MySqlCommand checkCommand = new MySqlCommand("SELECT COUNT(*) FROM Tarifler WHERE TarifAdi = @TarifAdi", connection);
+                        checkCommand.Parameters.AddWithValue("@TarifAdi", txtTarifAdi.Text);
+
+                        int tarifCount = Convert.ToInt32(checkCommand.ExecuteScalar());
+
+                        // Eğer aynı isimde bir tarif varsa eklemeyi durdur
+                        if (tarifCount > 0)
+                        {
+                            MessageBox.Show("Bu isimde bir tarif zaten mevcut. Lütfen başka bir isim seçin.");
+                            return;
+                        }
+
+                        // Görseli belirttiğiniz dizine kaydetmek için dosya adını kullanıyoruz
+                        string imageFileName = Path.GetFileName(selectedImagePath);
+                        string imageSavePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", imageFileName);
+
+                        // Eğer dizin yoksa oluştur
+                        if (!Directory.Exists(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources"))
+                        {
+                            Directory.CreateDirectory(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources");
+                        }
+
+                        // Dosyayı hedef dizine kopyala
+                        File.Copy(selectedImagePath, imageSavePath, true);
+
+                        // Tarif ismi benzersiz olduğuna göre eklemeye devam edebiliriz
                         MySqlCommand command = new MySqlCommand("INSERT INTO Tarifler (TarifAdi, Kategori, HazirlamaSuresi, Talimatlar, GorselAdi) VALUES (@TarifAdi, @Kategori, @HazirlamaSuresi, @Talimatlar, @GorselAdi); SELECT LAST_INSERT_ID();", connection);
                         command.Parameters.AddWithValue("@TarifAdi", txtTarifAdi.Text);
                         command.Parameters.AddWithValue("@Kategori", cmbKategori.SelectedItem.ToString());
@@ -113,11 +126,8 @@ namespace YemekTarifiUygulamasi
             {
                 MessageBox.Show("Lütfen tüm alanları doldurun ve bir görsel seçin.");
             }
-
-
-
-
         }
+
 
         // Görsel seçim işlemi, PictureBox'a tıklanarak yapılacak
         private void pbGorsel_Click(object sender, EventArgs e)

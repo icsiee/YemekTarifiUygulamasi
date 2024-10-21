@@ -80,7 +80,6 @@
             Controls.Add(lblTarifAdi);
             Name = "TarifDetayForm";
             Text = "TarifDetayForm";
-            FormClosing += TarifDetayForm_FormClosing;
             ((System.ComponentModel.ISupportInitialize)pictureBoxTarif).EndInit();
             ResumeLayout(false);
             PerformLayout();

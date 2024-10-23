@@ -15,40 +15,41 @@ namespace YemekTarifiUygulamasi
         public Form1()
         {
             InitializeComponent();
-            // DataGridView'e s?tun ekle
+
+            // DataGridView'e sütun ekle
             dataGridViewTarifler.Columns.Clear();
 
-            // G?rsel s?tunu
+            // Görsel sütunu
             DataGridViewImageColumn imageColumn = new DataGridViewImageColumn();
             imageColumn.Name = "Gorsel";
-            imageColumn.HeaderText = "G?rsel";
+            imageColumn.HeaderText = "Görsel";
             dataGridViewTarifler.Columns.Add(imageColumn);
-            imageColumn.ImageLayout = DataGridViewImageCellLayout.Zoom; // Resmi orant?l? ?ekilde k???lt?p b?y?t?r
+            imageColumn.ImageLayout = DataGridViewImageCellLayout.Zoom; // Resmi orantýlý þekilde küçültüp büyüt
 
-
-            // TarifID s?tununu ekle
+            // TarifID sütununu ekle
             DataGridViewTextBoxColumn tarifIdColumn = new DataGridViewTextBoxColumn();
             tarifIdColumn.Name = "TarifID";
             tarifIdColumn.HeaderText = "Tarif ID";
             tarifIdColumn.Visible = false;
-
             dataGridViewTarifler.Columns.Add(tarifIdColumn);
 
-            dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.CellSelect; // Sadece h?creler se?ilebilir, sat?r se?imi kapal?
-            dataGridViewTarifler.MultiSelect = false; // ?oklu h?cre se?imi kapal?
-            dataGridViewTarifler.ClearSelection(); // Varsay?lan olarak se?ili h?creleri kald?r
+            dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.CellSelect; // Sadece hücreler seçilebilir
+            dataGridViewTarifler.MultiSelect = false; // Çoklu hücre seçimi kapalý
+            dataGridViewTarifler.ClearSelection(); // Varsayýlan olarak seçili hücreleri kaldýr
 
-            // Di?er s?tunlar? ekle
-            dataGridViewTarifler.Columns.Add("TarifAdi", "Tarif Ad?");
-            dataGridViewTarifler.Columns.Add("HazirlamaSuresi", "Haz?rlama S?resi (dk)");
+            // Diðer sütunlarý ekle
+            dataGridViewTarifler.Columns.Add("TarifAdi", "Tarif Adý");
+            dataGridViewTarifler.Columns.Add("HazirlamaSuresi", "Hazýrlama Süresi (dk)");
             dataGridViewTarifler.Columns.Add("ToplamMaliyet", "Toplam Maliyet");
-            // Eksik Maliyet s?tununu ekleyelim
+
+            // Eksik Maliyet sütununu ekleyelim
             DataGridViewTextBoxColumn eksikMaliyetColumn = new DataGridViewTextBoxColumn();
             eksikMaliyetColumn.Name = "EksikMaliyet";
             eksikMaliyetColumn.HeaderText = "Eksik Maliyet";
             eksikMaliyetColumn.ReadOnly = true;
             dataGridViewTarifler.Columns.Add(eksikMaliyetColumn);
-            // Di?er ayarlar
+
+            // Diðer ayarlar
             dataGridViewTarifler.AllowUserToAddRows = false;
 
             // "Sil" buton sütunu
@@ -59,24 +60,41 @@ namespace YemekTarifiUygulamasi
             silButtonColumn.UseColumnTextForButtonValue = true;
             dataGridViewTarifler.Columns.Add(silButtonColumn);
 
-            // DataGridView'e buton s?tunu ekle
+            // "Detay" buton sütunu
             DataGridViewButtonColumn detayButtonColumn = new DataGridViewButtonColumn();
             detayButtonColumn.Name = "Detay";
-            detayButtonColumn.HeaderText = "Detay G?ster";
+            detayButtonColumn.HeaderText = "Detay Göster";
             detayButtonColumn.Text = "Detay";
-            detayButtonColumn.UseColumnTextForButtonValue = true; // Buton ?zerinde yaz? g?z?ks?n
+            detayButtonColumn.UseColumnTextForButtonValue = true; // Buton üzerinde yazý gözüksün
             dataGridViewTarifler.Columns.Add(detayButtonColumn);
 
+            // Event Handlers
             cmbFiltrele.SelectedIndexChanged += cmbFiltrele_SelectedIndexChanged;
             this.KeyPreview = true;
             this.KeyDown += new KeyEventHandler(Form1_KeyDown);
 
             malzemeEkleForm = new MalzemeEkleForm(this);
 
-
-            // Form y?klendi?inde tarifleri y?kle
+            // Form yüklendiðinde tarifleri yükle
             LoadTarifler();
+
+            // DataGridView için CellFormatting olayý
+            dataGridViewTarifler.CellFormatting += DataGridViewTarifler_CellFormatting;
         }
+
+        private void DataGridViewTarifler_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            // "Sil" butonunun rengini kýrmýzý yapma
+            if (dataGridViewTarifler.Columns[e.ColumnIndex].Name == "Sil" && e.RowIndex >= 0)
+            {
+                e.CellStyle.BackColor = Color.Red; // Kýrmýzý arka plan
+                e.CellStyle.ForeColor = Color.White; // Beyaz yazý rengi
+            }
+        }
+
+
+
+
         public void LoadTarifler()
         {
             string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234";
@@ -149,14 +167,14 @@ namespace YemekTarifiUygulamasi
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show("Sat?r i?leme hatas?: " + ex.Message);
+                                MessageBox.Show("Satýr iþleme hatasi: " + ex.Message);
                             }
                         }
                     }
                 }
                 catch (MySqlException ex)
                 {
-                    MessageBox.Show("Veritaban?na ba?lan?rken bir hata olu?tu: " + ex.Message);
+                    MessageBox.Show("Veritabanýna baðlanýrken bir hata oluþtu: " + ex.Message);
                 }
                 catch (Exception ex)
                 {
@@ -190,12 +208,20 @@ namespace YemekTarifiUygulamasi
                         try
                         {
                             connection.Open();
+
+                            // Ýlk olarak tarifin iliþkilerini sil
+                            string deleteRelationQuery = "DELETE FROM tarifmalzemeiliskisi WHERE TarifID = @TarifID";
+                            MySqlCommand deleteRelationCommand = new MySqlCommand(deleteRelationQuery, connection);
+                            deleteRelationCommand.Parameters.AddWithValue("@TarifID", tarifId);
+                            deleteRelationCommand.ExecuteNonQuery();
+
+                            // Ardýndan tarifin kendisini sil
                             string deleteQuery = "DELETE FROM tarifler WHERE TarifID = @TarifID";
                             MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection);
                             deleteCommand.Parameters.AddWithValue("@TarifID", tarifId);
                             deleteCommand.ExecuteNonQuery();
 
-                            MessageBox.Show("Tarif baþarýyla silindi.");
+                            MessageBox.Show("Tarif ve iliþkileri baþarýyla silindi.");
                             LoadTarifler(); // Silmeden sonra tarifleri yeniden yükle
                         }
                         catch (MySqlException ex)
@@ -205,6 +231,7 @@ namespace YemekTarifiUygulamasi
                     }
                 }
             }
+
         }
 
 

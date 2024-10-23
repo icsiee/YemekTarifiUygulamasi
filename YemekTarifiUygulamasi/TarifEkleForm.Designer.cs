@@ -73,9 +73,9 @@
             label3.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
             label3.Location = new Point(12, 110);
             label3.Name = "label3";
-            label3.Size = new Size(277, 29);
+            label3.Size = new Size(304, 29);
             label3.TabIndex = 2;
-            label3.Text = "Hazırlama Süresi (saat):";
+            label3.Text = "Hazırlama Süresi (dakika):";
             // 
             // label4
             // 
@@ -92,14 +92,14 @@
             // 
             txtTarifAdi.Location = new Point(133, 26);
             txtTarifAdi.Name = "txtTarifAdi";
-            txtTarifAdi.Size = new Size(125, 27);
+            txtTarifAdi.Size = new Size(289, 27);
             txtTarifAdi.TabIndex = 4;
             // 
             // txtHazirlamaSuresi
             // 
-            txtHazirlamaSuresi.Location = new Point(295, 114);
+            txtHazirlamaSuresi.Location = new Point(332, 114);
             txtHazirlamaSuresi.Name = "txtHazirlamaSuresi";
-            txtHazirlamaSuresi.Size = new Size(125, 27);
+            txtHazirlamaSuresi.Size = new Size(62, 27);
             txtHazirlamaSuresi.TabIndex = 5;
             // 
             // btnEkle
@@ -147,7 +147,7 @@
             // 
             // btnMaddeEkle
             // 
-            btnMaddeEkle.Location = new Point(307, 156);
+            btnMaddeEkle.Location = new Point(374, 156);
             btnMaddeEkle.Name = "btnMaddeEkle";
             btnMaddeEkle.Size = new Size(40, 29);
             btnMaddeEkle.TabIndex = 14;
@@ -159,7 +159,7 @@
             // 
             txtMadde.Location = new Point(164, 156);
             txtMadde.Name = "txtMadde";
-            txtMadde.Size = new Size(125, 27);
+            txtMadde.Size = new Size(204, 27);
             txtMadde.TabIndex = 15;
             // 
             // TarifEkleForm

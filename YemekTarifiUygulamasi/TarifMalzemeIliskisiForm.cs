@@ -16,15 +16,23 @@ namespace YemekTarifiUygulamasi
         public TarifMalzemeIliskisiForm(Form1 parentForm, int tarifId)
         {
             InitializeComponent();
-            this.form1 = parentForm;  // Form1 referansını alıyoruz
+            this.form1 = parentForm;  // Form1 reference
             this.tarifId = tarifId;
 
-            InitializeDataGridView(); // DataGridView'i başlat
-            LoadMalzeme();            // Malzemeleri yükle
+            InitializeDataGridView(); // Initialize DataGridView
+            LoadMalzeme();            // Load ingredients
 
-            // CellClick olayını ekleyelim
+            // Subscribe to the CellValueChanged event
+            dataGridViewMalzemeler.CellValueChanged += new DataGridViewCellEventHandler(dataGridViewMalzemeler_CellValueChanged);
+            dataGridViewMalzemeler.CurrentCellDirtyStateChanged += (s, e) => {
+                if (dataGridViewMalzemeler.IsCurrentCellDirty)
+                    dataGridViewMalzemeler.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            };
+
+            // Add CellClick event for delete button
             dataGridViewMalzemeler.CellClick += new DataGridViewCellEventHandler(dataGridViewMalzemeler_CellClick);
         }
+
 
 
 
@@ -41,6 +49,25 @@ namespace YemekTarifiUygulamasi
             btnSil.Text = "Sil";       // Her hücrede görünecek yazı
             btnSil.UseColumnTextForButtonValue = true; // Her hücrede "Sil" yazısı olsun
             dataGridViewMalzemeler.Columns.Add(btnSil); // Sütunu ekle
+        }
+
+        private void dataGridViewMalzemeler_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            // Check if the edited column is "Miktar"
+            if (e.ColumnIndex == dataGridViewMalzemeler.Columns["Miktar"].Index && e.RowIndex >= 0)
+            {
+                float updatedMiktar;
+
+                // Get the updated amount and update the list
+                if (float.TryParse(dataGridViewMalzemeler.Rows[e.RowIndex].Cells["Miktar"].Value.ToString(), out updatedMiktar))
+                {
+                    malzemeler[e.RowIndex] = new Tuple<int, string, float>(malzemeler[e.RowIndex].Item1, malzemeler[e.RowIndex].Item2, updatedMiktar);
+                }
+                else
+                {
+                    MessageBox.Show("Geçersiz miktar. Lütfen sayısal bir değer girin.");
+                }
+            }
         }
 
 

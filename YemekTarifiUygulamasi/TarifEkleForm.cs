@@ -140,8 +140,14 @@ namespace YemekTarifiUygulamasi
             {
                 selectedImagePath = ofd.FileName;
                 pbGorsel.ImageLocation = selectedImagePath; // Seçilen görseli PictureBox'a yükle
+                pbGorsel.SizeMode = PictureBoxSizeMode.Zoom;
+
+                // Eğer görsel yüklenirse, PictureBox içinde değişiklik yapılmadığı takdirde aynı görseli tekrar seçebiliriz
+                pbGorsel.Invalidate(); // PictureBox'ı günceller
+                pbGorsel.SizeMode = PictureBoxSizeMode.Zoom;
             }
         }
+
 
         private void btnMaddeEkle_Click_1(object sender, EventArgs e)
         {
@@ -180,5 +186,7 @@ namespace YemekTarifiUygulamasi
         {
             form1.Show();
         }
+
+      
     }
 }

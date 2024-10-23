@@ -19,12 +19,18 @@ namespace YemekTarifiUygulamasi
             // DataGridView'e sütun ekle
             dataGridViewTarifler.Columns.Clear();
 
+            // Numaralandýrma sütununu ekle
+            dataGridViewTarifler.Columns.Add("No", "No");
+
+
             // Görsel sütunu
             DataGridViewImageColumn imageColumn = new DataGridViewImageColumn();
             imageColumn.Name = "Gorsel";
             imageColumn.HeaderText = "Görsel";
             dataGridViewTarifler.Columns.Add(imageColumn);
             imageColumn.ImageLayout = DataGridViewImageCellLayout.Zoom; // Resmi orantýlý þekilde küçültüp büyüt
+
+            
 
             // TarifID sütununu ekle
             DataGridViewTextBoxColumn tarifIdColumn = new DataGridViewTextBoxColumn();
@@ -104,30 +110,31 @@ namespace YemekTarifiUygulamasi
                 {
                     connection.Open();
                     string query = @"
-                SELECT 
-                    t.TarifID, 
-                    t.TarifAdi, 
-                    t.HazirlamaSuresi, 
-                    SUM(m.BirimFiyat * tm.Malzememiktar) AS ToplamMaliyet, 
-                    t.GorselAdi,
-                    (SELECT SUM(m2.BirimFiyat * (tm2.Malzememiktar - m2.ToplamMiktar))
-                     FROM malzemeler m2
-                     JOIN tarifmalzemeiliskisi tm2 ON m2.MalzemeID = tm2.MalzemeID
-                     WHERE tm2.TarifID = t.TarifID AND m2.ToplamMiktar < tm2.Malzememiktar) AS EksikMaliyet
-                FROM 
-                    tarifler t
-                LEFT JOIN 
-                    tarifmalzemeiliskisi tm ON t.TarifID = tm.TarifID
-                LEFT JOIN 
-                    malzemeler m ON tm.MalzemeID = m.MalzemeID
-                GROUP BY 
-                    t.TarifID, t.TarifAdi, t.HazirlamaSuresi, t.GorselAdi";
+            SELECT 
+                t.TarifID, 
+                t.TarifAdi, 
+                t.HazirlamaSuresi, 
+                SUM(m.BirimFiyat * tm.Malzememiktar) AS ToplamMaliyet, 
+                t.GorselAdi,
+                (SELECT SUM(m2.BirimFiyat * (tm2.Malzememiktar - m2.ToplamMiktar))
+                 FROM malzemeler m2
+                 JOIN tarifmalzemeiliskisi tm2 ON m2.MalzemeID = tm2.MalzemeID
+                 WHERE tm2.TarifID = t.TarifID AND m2.ToplamMiktar < tm2.Malzememiktar) AS EksikMaliyet
+            FROM 
+                tarifler t
+            LEFT JOIN 
+                tarifmalzemeiliskisi tm ON t.TarifID = tm.TarifID
+            LEFT JOIN 
+                malzemeler m ON tm.MalzemeID = m.MalzemeID
+            GROUP BY 
+                t.TarifID, t.TarifAdi, t.HazirlamaSuresi, t.GorselAdi";
 
                     MySqlCommand command = new MySqlCommand(query, connection);
+                    dataGridViewTarifler.Rows.Clear();
 
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
-                        dataGridViewTarifler.Rows.Clear();
+                        int rowNumber = 1; // Numaralandýrma için sayaç
 
                         while (reader.Read())
                         {
@@ -140,7 +147,7 @@ namespace YemekTarifiUygulamasi
                                 decimal? eksikMaliyet = reader.IsDBNull("EksikMaliyet") ? null : reader.GetDecimal("EksikMaliyet");
                                 string gorselAdi = reader.GetString("GorselAdi");
 
-                                // Resmi y?kle
+                                // Resmi yükle
                                 Image tarifImage = null;
                                 string imagePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", gorselAdi);
                                 if (!string.IsNullOrEmpty(gorselAdi) && File.Exists(imagePath))
@@ -149,25 +156,28 @@ namespace YemekTarifiUygulamasi
                                 }
 
                                 // Verileri DataGridView'e ekle
-                                int rowIndex = dataGridViewTarifler.Rows.Add(tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
+                                int rowIndex = dataGridViewTarifler.Rows.Add(rowNumber, tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
 
-                                // EksikMaliyet s?tununa veri ekle
+                                // EksikMaliyet sütununa veri ekle
                                 var row = dataGridViewTarifler.Rows[rowIndex];
-                                row.Cells["EksikMaliyet"].Value = eksikMaliyet.HasValue ? eksikMaliyet.Value.ToString("C") : "Eksik Maliyet Yok";
+                                row.Cells["EksikMaliyet"].Value = eksikMaliyet.HasValue ? eksikMaliyet.Value.ToString("C") : "Maliyet Yok";
 
-                                // Tarifin durumuna g?re renk ayarla
+                                // Numaralandýrma sütununa deðer ekle
+                                row.Cells["No"].Value = rowNumber++; // Sýra numarasýný ekle
+
+                                // Tarifin durumuna göre renk ayarla
                                 if (eksikMaliyet.HasValue)
                                 {
                                     row.DefaultCellStyle.BackColor = Color.Red; // Eksik malzeme var
                                 }
                                 else
                                 {
-                                    row.DefaultCellStyle.BackColor = Color.Green; // T?m malzemeler yeterli
+                                    row.DefaultCellStyle.BackColor = Color.Green; // Tüm malzemeler yeterli
                                 }
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show("Satýr iþleme hatasi: " + ex.Message);
+                                MessageBox.Show("Satýr iþleme hatasý: " + ex.Message);
                             }
                         }
                     }
@@ -279,24 +289,24 @@ namespace YemekTarifiUygulamasi
                 {
                     connection.Open();
                     string query = @"
-        SELECT 
-            t.TarifID, 
-            t.TarifAdi, 
-            t.HazirlamaSuresi, 
-            SUM(m.BirimFiyat * tm.Malzememiktar) AS ToplamMaliyet, 
-            t.GorselAdi,
-            (SELECT SUM(m2.BirimFiyat * (tm2.Malzememiktar - m2.ToplamMiktar))
-             FROM malzemeler m2
-             JOIN tarifmalzemeiliskisi tm2 ON m2.MalzemeID = tm2.MalzemeID
-             WHERE tm2.TarifID = t.TarifID AND m2.ToplamMiktar < tm2.Malzememiktar) AS EksikMaliyet
-        FROM 
-            tarifler t
-        LEFT JOIN 
-            tarifmalzemeiliskisi tm ON t.TarifID = tm.TarifID
-        LEFT JOIN 
-            malzemeler m ON tm.MalzemeID = m.MalzemeID
-        WHERE 
-            t.TarifAdi LIKE @aramaKriteri";
+                SELECT 
+                    t.TarifID, 
+                    t.TarifAdi, 
+                    t.HazirlamaSuresi, 
+                    SUM(m.BirimFiyat * tm.Malzememiktar) AS ToplamMaliyet, 
+                    t.GorselAdi,
+                    (SELECT SUM(m2.BirimFiyat * (tm2.Malzememiktar - m2.ToplamMiktar))
+                     FROM malzemeler m2
+                     JOIN tarifmalzemeiliskisi tm2 ON m2.MalzemeID = tm2.MalzemeID
+                     WHERE tm2.TarifID = t.TarifID AND m2.ToplamMiktar < tm2.Malzememiktar) AS EksikMaliyet
+                FROM 
+                    tarifler t
+                LEFT JOIN 
+                    tarifmalzemeiliskisi tm ON t.TarifID = tm.TarifID
+                LEFT JOIN 
+                    malzemeler m ON tm.MalzemeID = m.MalzemeID
+                WHERE 
+                    t.TarifAdi LIKE @aramaKriteri";
 
                     // Filtre kriteri "Tümü" deðilse kategori filtresi ekle
                     if (!string.IsNullOrEmpty(filtreKriteri) && filtreKriteri != "Tümü")
@@ -316,6 +326,8 @@ namespace YemekTarifiUygulamasi
 
                     // DataGridView'i temizle
                     dataGridViewTarifler.Rows.Clear();
+
+                    int rowNumber = 1; // Numaralandýrma için sayaç
 
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
@@ -337,11 +349,14 @@ namespace YemekTarifiUygulamasi
                             }
 
                             // Verileri DataGridView'e ekle
-                            int rowIndex = dataGridViewTarifler.Rows.Add(tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
+                            int rowIndex = dataGridViewTarifler.Rows.Add(rowNumber, tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
 
                             // EksikMaliyet sütununa veri ekle
                             var row = dataGridViewTarifler.Rows[rowIndex];
                             row.Cells["EksikMaliyet"].Value = eksikMaliyet.HasValue ? eksikMaliyet.Value.ToString("C") : "Maliyet Yok";
+
+                            // Numaralandýrma sütununa deðer ekle
+                            row.Cells["No"].Value = rowNumber++; // Sýra numarasýný ekle
 
                             // Tarifin durumuna göre renk ayarla
                             if (eksikMaliyet.HasValue)
@@ -365,7 +380,6 @@ namespace YemekTarifiUygulamasi
                 }
             }
         }
-
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {

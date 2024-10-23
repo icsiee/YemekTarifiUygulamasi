@@ -46,7 +46,7 @@
             label1.AutoSize = true;
             label1.BackColor = Color.PeachPuff;
             label1.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            label1.Location = new Point(99, 102);
+            label1.Location = new Point(164, 130);
             label1.Margin = new Padding(5, 0, 5, 0);
             label1.Name = "label1";
             label1.Size = new Size(157, 29);
@@ -57,7 +57,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            label2.Location = new Point(99, 149);
+            label2.Location = new Point(164, 200);
             label2.Margin = new Padding(5, 0, 5, 0);
             label2.Name = "label2";
             label2.Size = new Size(82, 29);
@@ -68,7 +68,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            label3.Location = new Point(99, 200);
+            label3.Location = new Point(164, 268);
             label3.Margin = new Padding(5, 0, 5, 0);
             label3.Name = "label3";
             label3.Size = new Size(208, 29);
@@ -80,7 +80,7 @@
             label4.AutoSize = true;
             label4.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
             label4.ForeColor = SystemColors.ActiveCaptionText;
-            label4.Location = new Point(99, 250);
+            label4.Location = new Point(164, 341);
             label4.Margin = new Padding(5, 0, 5, 0);
             label4.Name = "label4";
             label4.Size = new Size(313, 29);
@@ -92,7 +92,7 @@
             btnEkle.BackColor = Color.Red;
             btnEkle.Font = new Font("Sitka Small", 10.1999989F, FontStyle.Bold, GraphicsUnit.Point, 162);
             btnEkle.ForeColor = SystemColors.ButtonHighlight;
-            btnEkle.Location = new Point(109, 345);
+            btnEkle.Location = new Point(196, 475);
             btnEkle.Margin = new Padding(5, 4, 5, 4);
             btnEkle.Name = "btnEkle";
             btnEkle.Size = new Size(170, 54);
@@ -106,7 +106,7 @@
             btnIptal.BackColor = Color.Red;
             btnIptal.Font = new Font("Sitka Small", 10.1999989F, FontStyle.Bold, GraphicsUnit.Point, 162);
             btnIptal.ForeColor = SystemColors.ButtonHighlight;
-            btnIptal.Location = new Point(308, 345);
+            btnIptal.Location = new Point(432, 475);
             btnIptal.Margin = new Padding(5, 4, 5, 4);
             btnIptal.Name = "btnIptal";
             btnIptal.Size = new Size(170, 54);
@@ -117,37 +117,37 @@
             // 
             // txtMalzemeAdi
             // 
-            txtMalzemeAdi.Location = new Point(422, 102);
+            txtMalzemeAdi.Location = new Point(504, 130);
             txtMalzemeAdi.Margin = new Padding(5, 4, 5, 4);
             txtMalzemeAdi.Name = "txtMalzemeAdi";
-            txtMalzemeAdi.Size = new Size(98, 29);
+            txtMalzemeAdi.Size = new Size(142, 29);
             txtMalzemeAdi.TabIndex = 6;
             // 
             // txtMiktar
             // 
             txtMiktar.BackColor = SystemColors.HighlightText;
-            txtMiktar.Location = new Point(422, 201);
+            txtMiktar.Location = new Point(504, 269);
             txtMiktar.Margin = new Padding(5, 4, 5, 4);
             txtMiktar.Name = "txtMiktar";
-            txtMiktar.Size = new Size(98, 29);
+            txtMiktar.Size = new Size(142, 29);
             txtMiktar.TabIndex = 7;
             // 
             // txtBirimFiyat
             // 
-            txtBirimFiyat.Location = new Point(422, 251);
+            txtBirimFiyat.Location = new Point(504, 341);
             txtBirimFiyat.Margin = new Padding(5, 4, 5, 4);
             txtBirimFiyat.Name = "txtBirimFiyat";
-            txtBirimFiyat.Size = new Size(98, 29);
+            txtBirimFiyat.Size = new Size(142, 29);
             txtBirimFiyat.TabIndex = 8;
             // 
             // cmbBirim
             // 
             cmbBirim.BackColor = SystemColors.HighlightText;
             cmbBirim.FormattingEnabled = true;
-            cmbBirim.Location = new Point(422, 150);
+            cmbBirim.Location = new Point(504, 197);
             cmbBirim.Margin = new Padding(5, 4, 5, 4);
             cmbBirim.Name = "cmbBirim";
-            cmbBirim.Size = new Size(98, 32);
+            cmbBirim.Size = new Size(142, 32);
             cmbBirim.TabIndex = 9;
             // 
             // YeniMalzemeEkleForm
@@ -157,7 +157,7 @@
             BackColor = Color.PeachPuff;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(582, 553);
+            ClientSize = new Size(782, 753);
             Controls.Add(cmbBirim);
             Controls.Add(txtBirimFiyat);
             Controls.Add(txtMiktar);

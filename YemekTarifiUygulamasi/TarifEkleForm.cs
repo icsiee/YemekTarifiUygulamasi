@@ -10,7 +10,7 @@ namespace YemekTarifiUygulamasi
     public partial class TarifEkleForm : Form
     {
         private Form1 form1; // Form1 referansı
-        string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
+        string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@;";
         private string selectedImagePath = string.Empty; // Seçilen görselin dosya yolu
         private MalzemeEkleForm malzemeEkleForm;
         public TarifEkleForm(Form1 form1, MalzemeEkleForm malzemeEkleForm) // Form1 referansı parametre olarak alınıyor
@@ -78,12 +78,12 @@ namespace YemekTarifiUygulamasi
 
                         // Görseli belirttiğiniz dizine kaydetmek için dosya adını kullanıyoruz
                         string imageFileName = Path.GetFileName(selectedImagePath);
-                        string imageSavePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", imageFileName);
+                        string imageSavePath = Path.Combine(@"C:\Users\HP\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", imageFileName);
 
                         // Eğer dizin yoksa oluştur
-                        if (!Directory.Exists(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources"))
+                        if (!Directory.Exists(@"C:\Users\HP\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources"))
                         {
-                            Directory.CreateDirectory(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources");
+                            Directory.CreateDirectory(@"C:\Users\HP\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources");
                         }
 
                         // Dosyayı hedef dizine kopyala

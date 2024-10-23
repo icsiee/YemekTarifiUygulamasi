@@ -45,7 +45,7 @@
             label1.AutoSize = true;
             label1.BackColor = Color.PeachPuff;
             label1.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            label1.Location = new Point(113, 99);
+            label1.Location = new Point(211, 145);
             label1.Name = "label1";
             label1.Size = new Size(157, 29);
             label1.TabIndex = 0;
@@ -56,7 +56,7 @@
             label2.AutoSize = true;
             label2.BackColor = Color.PeachPuff;
             label2.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(113, 145);
+            label2.Location = new Point(211, 211);
             label2.Name = "label2";
             label2.Size = new Size(82, 29);
             label2.TabIndex = 1;
@@ -67,7 +67,7 @@
             label3.AutoSize = true;
             label3.BackColor = Color.PeachPuff;
             label3.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
-            label3.Location = new Point(113, 188);
+            label3.Location = new Point(211, 277);
             label3.Name = "label3";
             label3.Size = new Size(208, 29);
             label3.TabIndex = 2;
@@ -77,24 +77,24 @@
             // 
             cmbMalzemeAdi.BackColor = SystemColors.ButtonHighlight;
             cmbMalzemeAdi.FormattingEnabled = true;
-            cmbMalzemeAdi.Location = new Point(366, 100);
+            cmbMalzemeAdi.Location = new Point(482, 149);
             cmbMalzemeAdi.Name = "cmbMalzemeAdi";
-            cmbMalzemeAdi.Size = new Size(141, 28);
+            cmbMalzemeAdi.Size = new Size(163, 28);
             cmbMalzemeAdi.TabIndex = 3;
             // 
             // cmbBirim
             // 
             cmbBirim.FormattingEnabled = true;
-            cmbBirim.Location = new Point(366, 145);
+            cmbBirim.Location = new Point(482, 211);
             cmbBirim.Name = "cmbBirim";
-            cmbBirim.Size = new Size(141, 28);
+            cmbBirim.Size = new Size(163, 28);
             cmbBirim.TabIndex = 4;
             // 
             // txtMiktar
             // 
-            txtMiktar.Location = new Point(366, 188);
+            txtMiktar.Location = new Point(482, 277);
             txtMiktar.Name = "txtMiktar";
-            txtMiktar.Size = new Size(141, 27);
+            txtMiktar.Size = new Size(163, 27);
             txtMiktar.TabIndex = 5;
             // 
             // btnMalzemeEkle
@@ -102,7 +102,7 @@
             btnMalzemeEkle.BackColor = Color.Red;
             btnMalzemeEkle.Font = new Font("Sitka Small", 10.1999989F, FontStyle.Bold, GraphicsUnit.Point, 162);
             btnMalzemeEkle.ForeColor = SystemColors.ButtonHighlight;
-            btnMalzemeEkle.Location = new Point(134, 274);
+            btnMalzemeEkle.Location = new Point(211, 390);
             btnMalzemeEkle.Name = "btnMalzemeEkle";
             btnMalzemeEkle.Size = new Size(167, 56);
             btnMalzemeEkle.TabIndex = 6;
@@ -115,7 +115,7 @@
             btnIptal.BackColor = Color.Red;
             btnIptal.Font = new Font("Sitka Small", 10.1999989F, FontStyle.Bold, GraphicsUnit.Point, 162);
             btnIptal.ForeColor = SystemColors.ButtonHighlight;
-            btnIptal.Location = new Point(226, 348);
+            btnIptal.Location = new Point(329, 491);
             btnIptal.Name = "btnIptal";
             btnIptal.Size = new Size(167, 57);
             btnIptal.TabIndex = 7;
@@ -128,7 +128,7 @@
             btnYeniMalzemeEkle.BackColor = Color.Red;
             btnYeniMalzemeEkle.Font = new Font("Sitka Small", 10.1999989F, FontStyle.Bold, GraphicsUnit.Point, 162);
             btnYeniMalzemeEkle.ForeColor = SystemColors.ButtonHighlight;
-            btnYeniMalzemeEkle.Location = new Point(316, 274);
+            btnYeniMalzemeEkle.Location = new Point(456, 390);
             btnYeniMalzemeEkle.Name = "btnYeniMalzemeEkle";
             btnYeniMalzemeEkle.Size = new Size(167, 56);
             btnYeniMalzemeEkle.TabIndex = 8;
@@ -142,7 +142,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
-            ClientSize = new Size(582, 553);
+            ClientSize = new Size(782, 753);
             Controls.Add(btnYeniMalzemeEkle);
             Controls.Add(btnIptal);
             Controls.Add(btnMalzemeEkle);

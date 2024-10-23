@@ -8,7 +8,7 @@ namespace YemekTarifiUygulamasi
 {
     public partial class Form1 : Form
     {
-        string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234";
+        string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@";
         private MalzemeEkleForm malzemeEkleForm;
         private TarifDetayForm tarifDetayForm;
 
@@ -79,7 +79,7 @@ namespace YemekTarifiUygulamasi
         }
         public void LoadTarifler()
         {
-            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234";
+            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 try
@@ -124,7 +124,7 @@ namespace YemekTarifiUygulamasi
 
                                 // Resmi y?kle
                                 Image tarifImage = null;
-                                string imagePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", gorselAdi);
+                                string imagePath = Path.Combine(@"C:\Users\HP\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", gorselAdi);
                                 if (!string.IsNullOrEmpty(gorselAdi) && File.Exists(imagePath))
                                 {
                                     tarifImage = Image.FromFile(imagePath);
@@ -245,7 +245,7 @@ namespace YemekTarifiUygulamasi
 
         private void LoadTarifler(string aramaKriteri, string filtreKriteri)
         {
-            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
+            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645@;";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
                 try
@@ -303,7 +303,7 @@ namespace YemekTarifiUygulamasi
 
                             // Resmi yükle
                             Image tarifImage = null;
-                            string imagePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", gorselAdi);
+                            string imagePath = Path.Combine(@"C:\Users\HP\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", gorselAdi);
                             if (!string.IsNullOrEmpty(gorselAdi) && File.Exists(imagePath))
                             {
                                 tarifImage = Image.FromFile(imagePath);

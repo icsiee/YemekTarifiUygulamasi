@@ -8,7 +8,7 @@ namespace YemekTarifiUygulamasi
     {
         public event EventHandler MalzemeEklendi;
 
-        string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
+        string connectionString = "Server=localhost;Database=yemektarifidb;Uid=ezgi;Pwd=Ke1994+-7645;";
         private Form1 form1; // Form1 referansı
         private MalzemeEkleForm malzemeEkleForm;
 

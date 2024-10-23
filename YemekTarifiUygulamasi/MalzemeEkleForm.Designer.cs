@@ -154,6 +154,7 @@
             Controls.Add(label1);
             Name = "MalzemeEkleForm";
             Text = "MalzemeEkleForm";
+            FormClosing += MalzemeEkleForm_FormClosing_1;
             ResumeLayout(false);
             PerformLayout();
         }

@@ -46,9 +46,10 @@
             // 
             // pictureBoxTarif
             // 
-            pictureBoxTarif.Location = new Point(372, 42);
+            pictureBoxTarif.BackgroundImageLayout = ImageLayout.Zoom;
+            pictureBoxTarif.Location = new Point(493, 12);
             pictureBoxTarif.Name = "pictureBoxTarif";
-            pictureBoxTarif.Size = new Size(125, 62);
+            pictureBoxTarif.Size = new Size(275, 238);
             pictureBoxTarif.TabIndex = 1;
             pictureBoxTarif.TabStop = false;
             // 

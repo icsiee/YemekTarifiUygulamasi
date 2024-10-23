@@ -35,13 +35,14 @@
             label4 = new Label();
             txtTarifAdi = new TextBox();
             txtHazirlamaSuresi = new TextBox();
-            txtTalimatlar = new TextBox();
             btnEkle = new Button();
             cmbKategori = new ComboBox();
             pbGorsel = new PictureBox();
-            btnResimSec = new Button();
             ofdResimSec = new OpenFileDialog();
             label5 = new Label();
+            lstTalimatlar = new ListBox();
+            btnMaddeEkle = new Button();
+            txtMadde = new TextBox();
             ((System.ComponentModel.ISupportInitialize)pbGorsel).BeginInit();
             SuspendLayout();
             // 
@@ -51,6 +52,9 @@
             label1.BackColor = Color.PeachPuff;
             label1.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
             label1.Location = new Point(100, 90);
+            label1.BackColor = Color.PeachPuff;
+            label1.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label1.Location = new Point(12, 22);
             label1.Name = "label1";
             label1.Size = new Size(115, 29);
             label1.TabIndex = 0;
@@ -62,6 +66,9 @@
             label2.BackColor = Color.PeachPuff;
             label2.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
             label2.Location = new Point(100, 135);
+            label2.BackColor = Color.PeachPuff;
+            label2.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label2.Location = new Point(14, 66);
             label2.Name = "label2";
             label2.Size = new Size(113, 29);
             label2.TabIndex = 1;
@@ -73,6 +80,9 @@
             label3.BackColor = Color.PeachPuff;
             label3.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
             label3.Location = new Point(100, 180);
+            label3.BackColor = Color.PeachPuff;
+            label3.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label3.Location = new Point(12, 110);
             label3.Name = "label3";
             label3.Size = new Size(277, 29);
             label3.TabIndex = 2;
@@ -84,6 +94,9 @@
             label4.BackColor = Color.PeachPuff;
             label4.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
             label4.Location = new Point(100, 224);
+            label4.BackColor = Color.PeachPuff;
+            label4.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label4.Location = new Point(14, 152);
             label4.Name = "label4";
             label4.Size = new Size(134, 29);
             label4.TabIndex = 3;
@@ -92,6 +105,7 @@
             // txtTarifAdi
             // 
             txtTarifAdi.Location = new Point(386, 90);
+            txtTarifAdi.Location = new Point(133, 26);
             txtTarifAdi.Name = "txtTarifAdi";
             txtTarifAdi.Size = new Size(125, 27);
             txtTarifAdi.TabIndex = 4;
@@ -99,22 +113,19 @@
             // txtHazirlamaSuresi
             // 
             txtHazirlamaSuresi.Location = new Point(386, 180);
+            txtHazirlamaSuresi.Location = new Point(295, 114);
             txtHazirlamaSuresi.Name = "txtHazirlamaSuresi";
             txtHazirlamaSuresi.Size = new Size(125, 27);
             txtHazirlamaSuresi.TabIndex = 5;
-            // 
-            // txtTalimatlar
-            // 
-            txtTalimatlar.Location = new Point(386, 224);
-            txtTalimatlar.Name = "txtTalimatlar";
-            txtTalimatlar.Size = new Size(125, 27);
-            txtTalimatlar.TabIndex = 6;
             // 
             // btnEkle
             // 
             btnEkle.BackColor = Color.Red;
             btnEkle.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
             btnEkle.Location = new Point(123, 316);
+            btnEkle.BackColor = Color.Red;
+            btnEkle.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnEkle.Location = new Point(72, 375);
             btnEkle.Name = "btnEkle";
             btnEkle.Size = new Size(160, 52);
             btnEkle.TabIndex = 7;
@@ -126,6 +137,7 @@
             // 
             cmbKategori.FormattingEnabled = true;
             cmbKategori.Location = new Point(386, 139);
+            cmbKategori.Location = new Point(133, 67);
             cmbKategori.Name = "cmbKategori";
             cmbKategori.Size = new Size(125, 28);
             cmbKategori.TabIndex = 8;
@@ -134,12 +146,28 @@
             // 
             pbGorsel.BackgroundImageLayout = ImageLayout.Center;
             pbGorsel.Location = new Point(325, 269);
+            pbGorsel.BackgroundImageLayout = ImageLayout.Center;
+            pbGorsel.BorderStyle = BorderStyle.Fixed3D;
+            pbGorsel.Location = new Point(72, 235);
             pbGorsel.Name = "pbGorsel";
             pbGorsel.Size = new Size(148, 134);
             pbGorsel.TabIndex = 9;
             pbGorsel.TabStop = false;
+            pbGorsel.Paint += pbGorsel_Paint;
             // 
-            // btnResimSec
+            // ofdResimSec
+            // 
+            ofdResimSec.FileName = "openFileDialog1";
+            // 
+            // lstTalimatlar
+            // 
+            lstTalimatlar.FormattingEnabled = true;
+            lstTalimatlar.Location = new Point(355, 225);
+            lstTalimatlar.Name = "lstTalimatlar";
+            lstTalimatlar.Size = new Size(215, 204);
+            lstTalimatlar.TabIndex = 12;
+            // 
+            // btnMaddeEkle
             // 
             btnResimSec.Location = new Point(189, 269);
             btnResimSec.Name = "btnResimSec";
@@ -148,10 +176,20 @@
             btnResimSec.Text = "button1";
             btnResimSec.UseVisualStyleBackColor = true;
             btnResimSec.Click += btnResimSec_Click_1;
+            btnMaddeEkle.Location = new Point(307, 156);
+            btnMaddeEkle.Name = "btnMaddeEkle";
+            btnMaddeEkle.Size = new Size(40, 29);
+            btnMaddeEkle.TabIndex = 14;
+            btnMaddeEkle.Text = "button1";
+            btnMaddeEkle.UseVisualStyleBackColor = true;
+            btnMaddeEkle.Click += btnMaddeEkle_Click_1;
             // 
-            // ofdResimSec
+            // txtMadde
             // 
-            ofdResimSec.FileName = "openFileDialog1";
+            txtMadde.Location = new Point(164, 156);
+            txtMadde.Name = "txtMadde";
+            txtMadde.Size = new Size(125, 27);
+            txtMadde.TabIndex = 15;
             // 
             // label5
             // 
@@ -172,10 +210,14 @@
             ClientSize = new Size(582, 553);
             Controls.Add(label5);
             Controls.Add(btnResimSec);
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(582, 553);
+            Controls.Add(txtMadde);
+            Controls.Add(btnMaddeEkle);
+            Controls.Add(lstTalimatlar);
             Controls.Add(pbGorsel);
             Controls.Add(cmbKategori);
             Controls.Add(btnEkle);
-            Controls.Add(txtTalimatlar);
             Controls.Add(txtHazirlamaSuresi);
             Controls.Add(txtTarifAdi);
             Controls.Add(label4);
@@ -184,6 +226,7 @@
             Controls.Add(label1);
             Name = "TarifEkleForm";
             Text = "TarifEkleForm";
+            FormClosing += TarifEkleForm_FormClosing;
             ((System.ComponentModel.ISupportInitialize)pbGorsel).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -197,12 +240,13 @@
         private Label label4;
         private TextBox txtTarifAdi;
         private TextBox txtHazirlamaSuresi;
-        private TextBox txtTalimatlar;
         private Button btnEkle;
         private ComboBox cmbKategori;
         private PictureBox pbGorsel;
-        private Button btnResimSec;
         private OpenFileDialog ofdResimSec;
         private Label label5;
+        private ListBox lstTalimatlar;
+        private Button btnMaddeEkle;
+        private TextBox txtMadde;
     }
 }

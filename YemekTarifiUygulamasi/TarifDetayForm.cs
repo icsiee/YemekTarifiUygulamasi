@@ -36,11 +36,13 @@ namespace YemekTarifiUygulamasi
                         lblTarifAdi.Text = reader.GetString("TarifAdi"); // Tarif adını ekle
                         txtTalimatlar.Text = reader.GetString("Talimatlar"); // Talimatları ekle
 
-                        // Görselin projenin Images klasöründen yüklenmesi
+                        // Görselin projenin Resources klasöründen yüklenmesi
                         string imageFileName = reader.GetString("GorselAdi");
-                        string imagePath = Path.Combine(Application.StartupPath, "Images", imageFileName);
+                        string imagePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", imageFileName);
+
                         if (File.Exists(imagePath))
                         {
+                            pictureBoxTarif.SizeMode = PictureBoxSizeMode.Zoom; // Resmi orantılı şekilde sığdır
                             pictureBoxTarif.ImageLocation = imagePath; // Resmi göster
                         }
                         else
@@ -51,7 +53,5 @@ namespace YemekTarifiUygulamasi
                 }
             }
         }
-
-        
     }
 }

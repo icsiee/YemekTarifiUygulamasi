@@ -46,6 +46,7 @@
             // 
             // pictureBoxTarif
             // 
+            pictureBoxTarif.BackgroundImageLayout = ImageLayout.Zoom;
             pictureBoxTarif.Location = new Point(493, 12);
             pictureBoxTarif.Name = "pictureBoxTarif";
             pictureBoxTarif.Size = new Size(275, 238);

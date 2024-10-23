@@ -15,18 +15,18 @@ namespace YemekTarifiUygulamasi
         public Form1()
         {
             InitializeComponent();
-            // DataGridView'e sütun ekle
+            // DataGridView'e s?tun ekle
             dataGridViewTarifler.Columns.Clear();
 
-            // Görsel sütunu
+            // G?rsel s?tunu
             DataGridViewImageColumn imageColumn = new DataGridViewImageColumn();
             imageColumn.Name = "Gorsel";
-            imageColumn.HeaderText = "Görsel";
+            imageColumn.HeaderText = "G?rsel";
             dataGridViewTarifler.Columns.Add(imageColumn);
-            imageColumn.ImageLayout = DataGridViewImageCellLayout.Zoom; // Resmi orantýlý þekilde küçültüp büyütür
+            imageColumn.ImageLayout = DataGridViewImageCellLayout.Zoom; // Resmi orant?l? ?ekilde k???lt?p b?y?t?r
 
 
-            // TarifID sütununu ekle
+            // TarifID s?tununu ekle
             DataGridViewTextBoxColumn tarifIdColumn = new DataGridViewTextBoxColumn();
             tarifIdColumn.Name = "TarifID";
             tarifIdColumn.HeaderText = "Tarif ID";
@@ -34,29 +34,29 @@ namespace YemekTarifiUygulamasi
 
             dataGridViewTarifler.Columns.Add(tarifIdColumn);
 
-            dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.CellSelect; // Sadece hücreler seçilebilir, satýr seçimi kapalý
-            dataGridViewTarifler.MultiSelect = false; // Çoklu hücre seçimi kapalý
-            dataGridViewTarifler.ClearSelection(); // Varsayýlan olarak seçili hücreleri kaldýr
+            dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.CellSelect; // Sadece h?creler se?ilebilir, sat?r se?imi kapal?
+            dataGridViewTarifler.MultiSelect = false; // ?oklu h?cre se?imi kapal?
+            dataGridViewTarifler.ClearSelection(); // Varsay?lan olarak se?ili h?creleri kald?r
 
-            // Diðer sütunlarý ekle
-            dataGridViewTarifler.Columns.Add("TarifAdi", "Tarif Adý");
-            dataGridViewTarifler.Columns.Add("HazirlamaSuresi", "Hazýrlama Süresi (dk)");
+            // Di?er s?tunlar? ekle
+            dataGridViewTarifler.Columns.Add("TarifAdi", "Tarif Ad?");
+            dataGridViewTarifler.Columns.Add("HazirlamaSuresi", "Haz?rlama S?resi (dk)");
             dataGridViewTarifler.Columns.Add("ToplamMaliyet", "Toplam Maliyet");
-            // Eksik Maliyet sütununu ekleyelim
+            // Eksik Maliyet s?tununu ekleyelim
             DataGridViewTextBoxColumn eksikMaliyetColumn = new DataGridViewTextBoxColumn();
             eksikMaliyetColumn.Name = "EksikMaliyet";
             eksikMaliyetColumn.HeaderText = "Eksik Maliyet";
             eksikMaliyetColumn.ReadOnly = true;
             dataGridViewTarifler.Columns.Add(eksikMaliyetColumn);
-            // Diðer ayarlar
+            // Di?er ayarlar
             dataGridViewTarifler.AllowUserToAddRows = false;
 
-            // DataGridView'e buton sütunu ekle
+            // DataGridView'e buton s?tunu ekle
             DataGridViewButtonColumn detayButtonColumn = new DataGridViewButtonColumn();
             detayButtonColumn.Name = "Detay";
-            detayButtonColumn.HeaderText = "Detay Göster";
+            detayButtonColumn.HeaderText = "Detay G?ster";
             detayButtonColumn.Text = "Detay";
-            detayButtonColumn.UseColumnTextForButtonValue = true; // Buton üzerinde yazý gözüksün
+            detayButtonColumn.UseColumnTextForButtonValue = true; // Buton ?zerinde yaz? g?z?ks?n
             dataGridViewTarifler.Columns.Add(detayButtonColumn);
 
             cmbFiltrele.SelectedIndexChanged += cmbFiltrele_SelectedIndexChanged;
@@ -66,7 +66,7 @@ namespace YemekTarifiUygulamasi
             malzemeEkleForm = new MalzemeEkleForm(this);
 
 
-            // Form yüklendiðinde tarifleri yükle
+            // Form y?klendi?inde tarifleri y?kle
             LoadTarifler();
         }
         public void LoadTarifler()
@@ -114,9 +114,9 @@ namespace YemekTarifiUygulamasi
                                 decimal? eksikMaliyet = reader.IsDBNull("EksikMaliyet") ? null : reader.GetDecimal("EksikMaliyet");
                                 string gorselAdi = reader.GetString("GorselAdi");
 
-                                // Resmi yükle
+                                // Resmi y?kle
                                 Image tarifImage = null;
-                                string imagePath = Path.Combine(Application.StartupPath, "Images", gorselAdi);
+                                string imagePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", gorselAdi);
                                 if (!string.IsNullOrEmpty(gorselAdi) && File.Exists(imagePath))
                                 {
                                     tarifImage = Image.FromFile(imagePath);
@@ -125,30 +125,30 @@ namespace YemekTarifiUygulamasi
                                 // Verileri DataGridView'e ekle
                                 int rowIndex = dataGridViewTarifler.Rows.Add(tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
 
-                                // EksikMaliyet sütununa veri ekle
+                                // EksikMaliyet s?tununa veri ekle
                                 var row = dataGridViewTarifler.Rows[rowIndex];
                                 row.Cells["EksikMaliyet"].Value = eksikMaliyet.HasValue ? eksikMaliyet.Value.ToString("C") : "Eksik Maliyet Yok";
 
-                                // Tarifin durumuna göre renk ayarla
+                                // Tarifin durumuna g?re renk ayarla
                                 if (eksikMaliyet.HasValue)
                                 {
                                     row.DefaultCellStyle.BackColor = Color.Red; // Eksik malzeme var
                                 }
                                 else
                                 {
-                                    row.DefaultCellStyle.BackColor = Color.Green; // Tüm malzemeler yeterli
+                                    row.DefaultCellStyle.BackColor = Color.Green; // T?m malzemeler yeterli
                                 }
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show("Satýr iþleme hatasý: " + ex.Message);
+                                MessageBox.Show("Sat?r i?leme hatas?: " + ex.Message);
                             }
                         }
                     }
                 }
                 catch (MySqlException ex)
                 {
-                    MessageBox.Show("Veritabanýna baðlanýrken bir hata oluþtu: " + ex.Message);
+                    MessageBox.Show("Veritaban?na ba?lan?rken bir hata olu?tu: " + ex.Message);
                 }
                 catch (Exception ex)
                 {
@@ -157,30 +157,30 @@ namespace YemekTarifiUygulamasi
             }
         }
 
-        // DataGridView'in CellContentClick olayýný yakala
+        // DataGridView'in CellContentClick olay?n? yakala
         private void dataGridViewTarifler_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Eðer týklanan hücre "Detay Göster" butonu ise
+            // E?er t?klanan h?cre "Detay G?ster" butonu ise
             if (e.ColumnIndex == dataGridViewTarifler.Columns["Detay"].Index && e.RowIndex >= 0)
             {
-                // Seçilen satýrdaki Tarif ID'sini al
+                // Se?ilen sat?rdaki Tarif ID'sini al
                 long tarifId = Convert.ToInt64(dataGridViewTarifler.Rows[e.RowIndex].Cells["TarifID"].Value);
                 tarifDetayForm = new TarifDetayForm(tarifId, this);
-                tarifDetayForm.ShowDialog(); // Formu modal olarak aç
+                tarifDetayForm.ShowDialog(); // Formu modal olarak a?
                 tarifDetayForm.Hide();
             }
 
 
         }
 
-      
+
 
 
         private void btnMalzemeEkle_Click_1(object sender, EventArgs e)
         {
             this.Hide();
             MalzemeEkleForm malzemeEkleForm = new MalzemeEkleForm(this);
-            malzemeEkleForm.ShowDialog(); // Formu modal olarak aç
+            malzemeEkleForm.ShowDialog(); // Formu modal olarak a?
 
         }
 
@@ -189,7 +189,7 @@ namespace YemekTarifiUygulamasi
             string aramaKriteri = txtAra.Text.Trim();
             string filtreKriteri = cmbFiltrele.SelectedItem?.ToString();
 
-            LoadTarifler(aramaKriteri, filtreKriteri); // Tarife yükleme fonksiyonunu çaðýr
+            LoadTarifler(aramaKriteri, filtreKriteri); // Tarife y?kleme fonksiyonunu ?a??r
         }
 
 
@@ -197,9 +197,9 @@ namespace YemekTarifiUygulamasi
         {
             this.Hide(); // Formu gizler
 
-            // TarifEkleForm'u Form1 referansý ile aç
-            TarifEkleForm tarifEkleForm = new TarifEkleForm(this, malzemeEkleForm); // Form1 referansýný geçiyoruz
-            tarifEkleForm.ShowDialog(); // Modal olarak açýyoruz
+            // TarifEkleForm'u Form1 referans? ile a?
+            TarifEkleForm tarifEkleForm = new TarifEkleForm(this, malzemeEkleForm); // Form1 referans?n? ge?iyoruz
+            tarifEkleForm.ShowDialog(); // Modal olarak a??yoruz
         }
 
         private void btnAra_Click(object sender, EventArgs e)
@@ -207,7 +207,7 @@ namespace YemekTarifiUygulamasi
             string aramaKriteri = txtAra.Text.Trim();
             string filtreKriteri = cmbFiltrele.SelectedItem?.ToString();
 
-            LoadTarifler(aramaKriteri, filtreKriteri); // Tarife yükleme fonksiyonunu çaðýr
+            LoadTarifler(aramaKriteri, filtreKriteri); // Tarife y?kleme fonksiyonunu ?a??r
         }
 
 
@@ -239,9 +239,9 @@ namespace YemekTarifiUygulamasi
             WHERE 
                 t.TarifAdi LIKE @aramaKriteri";
 
-                    if (filtreKriteri != null && filtreKriteri != "Tümü")
+                    if (filtreKriteri != null && filtreKriteri != "T?m?")
                     {
-                        query += " AND t.Kategori = @filtreKriteri"; // Kategoriye göre filtreleme
+                        query += " AND t.Kategori = @filtreKriteri"; // Kategoriye g?re filtreleme
                     }
 
                     query += " GROUP BY t.TarifID, t.TarifAdi, t.HazirlamaSuresi, t.GorselAdi";
@@ -249,7 +249,7 @@ namespace YemekTarifiUygulamasi
                     MySqlCommand command = new MySqlCommand(query, connection);
                     command.Parameters.AddWithValue("@aramaKriteri", "%" + aramaKriteri + "%");
 
-                    if (filtreKriteri != null && filtreKriteri != "Tümü")
+                    if (filtreKriteri != null && filtreKriteri != "T?m?")
                     {
                         command.Parameters.AddWithValue("@filtreKriteri", filtreKriteri);
                     }
@@ -268,9 +268,9 @@ namespace YemekTarifiUygulamasi
                             decimal? eksikMaliyet = reader.IsDBNull("EksikMaliyet") ? null : reader.GetDecimal("EksikMaliyet");
                             string gorselAdi = reader.GetString("GorselAdi");
 
-                            // Resmi yükle
+                            // Resmi y?kle
                             Image tarifImage = null;
-                            string imagePath = Path.Combine(Application.StartupPath, "Images", gorselAdi);
+                            string imagePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", gorselAdi);
                             if (!string.IsNullOrEmpty(gorselAdi) && File.Exists(imagePath))
                             {
                                 tarifImage = Image.FromFile(imagePath);
@@ -280,25 +280,25 @@ namespace YemekTarifiUygulamasi
                             // Verileri DataGridView'e ekle
                             int rowIndex = dataGridViewTarifler.Rows.Add(tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
 
-                            // EksikMaliyet sütununa veri ekle
+                            // EksikMaliyet s?tununa veri ekle
                             var row = dataGridViewTarifler.Rows[rowIndex];
                             row.Cells["EksikMaliyet"].Value = eksikMaliyet.HasValue ? eksikMaliyet.Value.ToString("C") : "Maliyet Yok";
 
-                            // Tarifin durumuna göre renk ayarla
+                            // Tarifin durumuna g?re renk ayarla
                             if (eksikMaliyet.HasValue)
                             {
                                 row.DefaultCellStyle.BackColor = Color.Red; // Eksik malzeme var
                             }
                             else
                             {
-                                row.DefaultCellStyle.BackColor = Color.Green; // Tüm malzemeler yeterli
+                                row.DefaultCellStyle.BackColor = Color.Green; // T?m malzemeler yeterli
                             }
                         }
                     }
                 }
                 catch (MySqlException ex)
                 {
-                    MessageBox.Show("Veritabanýna baðlanýrken bir hata oluþtu: " + ex.Message);
+                    MessageBox.Show("Veritaban?na ba?lan?rken bir hata olu?tu: " + ex.Message);
                 }
                 catch (Exception ex)
                 {
@@ -307,22 +307,14 @@ namespace YemekTarifiUygulamasi
             }
         }
 
-
-
-
-       
-
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter) // Enter tuþuna basýldýðýnda
+            if (e.KeyCode == Keys.Enter) // Enter tu?una bas?ld???nda
             {
-                btnAra.PerformClick(); // Ara butonuna týkla (fonksiyonu çaðýr)
-                e.Handled = true; // Tuþ olayýný iþlediðimizi belirtiyoruz
+                btnAra.PerformClick(); // Ara butonuna t?kla (fonksiyonu ?a??r)
+                e.Handled = true; // Tu? olay?n? i?ledi?imizi belirtiyoruz
             }
         }
-
-       
-
 
         private void pictureBoxYenile_Click(object sender, EventArgs e)
         {
@@ -343,7 +335,7 @@ namespace YemekTarifiUygulamasi
 
         }
 
-       
+
 
     }
 }

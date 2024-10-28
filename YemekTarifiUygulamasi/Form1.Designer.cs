@@ -89,7 +89,7 @@
             dataGridViewTarifler.RowHeadersWidth = 51;
             dataGridViewTarifler.RowTemplate.Height = 100;
             dataGridViewTarifler.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewTarifler.Size = new Size(776, 441);
+            dataGridViewTarifler.Size = new Size(828, 823);
             dataGridViewTarifler.TabIndex = 0;
             dataGridViewTarifler.CellContentClick += dataGridViewTarifler_CellContentClick;
             // 
@@ -173,7 +173,7 @@
             // pictureBoxYenile
             // 
             pictureBoxYenile.Image = Properties.Resources.indir;
-            pictureBoxYenile.Location = new Point(1136, 12);
+            pictureBoxYenile.Location = new Point(800, 129);
             pictureBoxYenile.Name = "pictureBoxYenile";
             pictureBoxYenile.Size = new Size(40, 37);
             pictureBoxYenile.SizeMode = PictureBoxSizeMode.Zoom;
@@ -263,7 +263,8 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1188, 625);
+            BackgroundImage = Properties.Resources._94a41fc4_ffb8_46d3_a793_82056157e088;
+            ClientSize = new Size(1188, 1055);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);

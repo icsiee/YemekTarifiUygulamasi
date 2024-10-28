@@ -139,6 +139,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImage = Properties.Resources.af32c285_45df_4497_995a_c54cc1976a93;
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(582, 553);
             Controls.Add(btnYeniMalzemeEkle);

@@ -41,6 +41,7 @@
             lstTalimatlar = new ListBox();
             btnMaddeEkle = new Button();
             txtMadde = new TextBox();
+            label5 = new Label();
             ((System.ComponentModel.ISupportInitialize)pbGorsel).BeginInit();
             SuspendLayout();
             // 
@@ -140,18 +141,18 @@
             // lstTalimatlar
             // 
             lstTalimatlar.FormattingEnabled = true;
-            lstTalimatlar.Location = new Point(355, 225);
+            lstTalimatlar.Location = new Point(269, 247);
             lstTalimatlar.Name = "lstTalimatlar";
-            lstTalimatlar.Size = new Size(215, 204);
+            lstTalimatlar.Size = new Size(215, 164);
             lstTalimatlar.TabIndex = 12;
             // 
             // btnMaddeEkle
             // 
-            btnMaddeEkle.Location = new Point(374, 156);
+            btnMaddeEkle.Location = new Point(383, 156);
             btnMaddeEkle.Name = "btnMaddeEkle";
-            btnMaddeEkle.Size = new Size(40, 29);
+            btnMaddeEkle.Size = new Size(136, 29);
             btnMaddeEkle.TabIndex = 14;
-            btnMaddeEkle.Text = "button1";
+            btnMaddeEkle.Text = "TALİMAT EKLE";
             btnMaddeEkle.UseVisualStyleBackColor = true;
             btnMaddeEkle.Click += btnMaddeEkle_Click_1;
             // 
@@ -162,12 +163,23 @@
             txtMadde.Size = new Size(204, 27);
             txtMadde.TabIndex = 15;
             // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(332, 224);
+            label5.Name = "label5";
+            label5.Size = new Size(113, 20);
+            label5.TabIndex = 16;
+            label5.Text = "- TALİMATLAR -";
+            // 
             // TarifEkleForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImage = Properties.Resources.af32c285_45df_4497_995a_c54cc1976a93;
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(582, 553);
+            Controls.Add(label5);
             Controls.Add(txtMadde);
             Controls.Add(btnMaddeEkle);
             Controls.Add(lstTalimatlar);
@@ -203,5 +215,6 @@
         private ListBox lstTalimatlar;
         private Button btnMaddeEkle;
         private TextBox txtMadde;
+        private Label label5;
     }
 }

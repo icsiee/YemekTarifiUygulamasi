@@ -187,5 +187,10 @@ namespace YemekTarifiUygulamasi
                 command.ExecuteNonQuery();
             }
         }
+
+        private void txtTalimatlar_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

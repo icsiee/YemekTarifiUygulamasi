@@ -40,7 +40,7 @@
             // lblTarifAdi
             // 
             lblTarifAdi.AutoSize = true;
-            lblTarifAdi.Location = new Point(61, 68);
+            lblTarifAdi.Location = new Point(324, 85);
             lblTarifAdi.Name = "lblTarifAdi";
             lblTarifAdi.Size = new Size(50, 20);
             lblTarifAdi.TabIndex = 0;
@@ -49,37 +49,38 @@
             // pictureBoxTarif
             // 
             pictureBoxTarif.BackgroundImageLayout = ImageLayout.Zoom;
-            pictureBoxTarif.Location = new Point(526, 27);
+            pictureBoxTarif.Location = new Point(168, 120);
             pictureBoxTarif.Name = "pictureBoxTarif";
-            pictureBoxTarif.Size = new Size(174, 135);
+            pictureBoxTarif.Size = new Size(173, 166);
             pictureBoxTarif.TabIndex = 1;
             pictureBoxTarif.TabStop = false;
             // 
             // txtTalimatlar
             // 
-            txtTalimatlar.Location = new Point(61, 121);
+            txtTalimatlar.Location = new Point(347, 120);
             txtTalimatlar.Multiline = true;
             txtTalimatlar.Name = "txtTalimatlar";
-            txtTalimatlar.Size = new Size(238, 207);
+            txtTalimatlar.Size = new Size(218, 166);
             txtTalimatlar.TabIndex = 2;
+            txtTalimatlar.TextChanged += txtTalimatlar_TextChanged;
             // 
             // button1
             // 
-            button1.Location = new Point(61, 381);
+            button1.Location = new Point(306, 466);
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
             button1.TabIndex = 3;
-            button1.Text = "button1";
+            button1.Text = "KAYDET";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
             // dataGridViewMalzemeler
             // 
             dataGridViewMalzemeler.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewMalzemeler.Location = new Point(405, 231);
+            dataGridViewMalzemeler.Location = new Point(168, 292);
             dataGridViewMalzemeler.Name = "dataGridViewMalzemeler";
             dataGridViewMalzemeler.RowHeadersWidth = 51;
-            dataGridViewMalzemeler.Size = new Size(300, 188);
+            dataGridViewMalzemeler.Size = new Size(336, 168);
             dataGridViewMalzemeler.TabIndex = 4;
             dataGridViewMalzemeler.CellContentClick += dataGridViewMalzemeler_CellContentClick;
             // 
@@ -87,13 +88,16 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            BackgroundImage = Properties.Resources.af32c285_45df_4497_995a_c54cc1976a93;
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(710, 621);
             Controls.Add(dataGridViewMalzemeler);
             Controls.Add(button1);
             Controls.Add(txtTalimatlar);
             Controls.Add(pictureBoxTarif);
             Controls.Add(lblTarifAdi);
             Name = "TarifDetayForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "TarifDetayForm";
             ((System.ComponentModel.ISupportInitialize)pictureBoxTarif).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridViewMalzemeler).EndInit();

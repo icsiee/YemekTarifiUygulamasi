@@ -63,6 +63,26 @@ namespace YemekTarifiUygulamasi.Properties {
         /// <summary>
         ///   System.Drawing.Bitmap türünde yerelleştirilmiş bir kaynak arar.
         /// </summary>
+        internal static System.Drawing.Bitmap _94a41fc4_ffb8_46d3_a793_82056157e088 {
+            get {
+                object obj = ResourceManager.GetObject("94a41fc4-ffb8-46d3-a793-82056157e088", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap türünde yerelleştirilmiş bir kaynak arar.
+        /// </summary>
+        internal static System.Drawing.Bitmap af32c285_45df_4497_995a_c54cc1976a93 {
+            get {
+                object obj = ResourceManager.GetObject("af32c285-45df-4497-995a-c54cc1976a93", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   System.Drawing.Bitmap türünde yerelleştirilmiş bir kaynak arar.
+        /// </summary>
         internal static System.Drawing.Bitmap indir {
             get {
                 object obj = ResourceManager.GetObject("indir", resourceCulture);

@@ -153,6 +153,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImage = Properties.Resources.af32c285_45df_4497_995a_c54cc1976a93;
             ClientSize = new Size(800, 450);
             Controls.Add(btnIptal);
             Controls.Add(btnEkle);

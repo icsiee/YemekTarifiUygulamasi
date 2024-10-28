@@ -208,6 +208,12 @@ GROUP BY
                         // Numaralandýrma sütununa deðer ekle
                         row.Cells["No"].Value = rowNumber++; // Sýra numarasýný ekle
 
+                        // DataGridView sýralandýktan sonra "No" sütununu güncelle
+                        for (int i = 0; i < dataGridViewTarifler.Rows.Count; i++)
+                        {
+                            dataGridViewTarifler.Rows[i].Cells["No"].Value = i + 1;
+                        }
+
                         // Tarifin durumuna göre renk ayarla
                         if (tarif.EksikMaliyet.HasValue)
                         {
@@ -287,6 +293,11 @@ GROUP BY
                         catch (MySqlException ex)
                         {
                             MessageBox.Show("Tarif silinirken bir hata oluþtu: " + ex.Message);
+                        }
+                        // DataGridView sýralandýktan sonra "No" sütununu güncelle
+                        for (int i = 0; i < dataGridViewTarifler.Rows.Count; i++)
+                        {
+                            dataGridViewTarifler.Rows[i].Cells["No"].Value = i + 1;
                         }
                     }
                 }
@@ -372,7 +383,8 @@ GROUP BY
                 query += " GROUP BY t.TarifID, t.TarifAdi, t.HazirlamaSuresi, t.GorselAdi";
 
                 MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@aramaKriteri", "%" + aramaKriteri + "%");
+                command.Parameters.AddWithValue("@aramaKriteri", aramaKriteri + "%");
+
 
                 if (!string.IsNullOrEmpty(filtreKriteri) && filtreKriteri != "Tümü")
                 {
@@ -444,6 +456,11 @@ GROUP BY
                     else
                     {
                         row.DefaultCellStyle.BackColor = Color.Green; // Tüm malzemeler yeterli
+                    }
+                    // DataGridView sýralandýktan sonra "No" sütununu güncelle
+                    for (int i = 0; i < dataGridViewTarifler.Rows.Count; i++)
+                    {
+                        dataGridViewTarifler.Rows[i].Cells["No"].Value = i + 1;
                     }
                 }
             }
@@ -661,6 +678,12 @@ HAVING
                         else
                         {
                             row.DefaultCellStyle.BackColor = Color.Green; // Tüm malzemeler yeterli
+                        }
+
+                        // DataGridView sýralandýktan sonra "No" sütununu güncelle
+                        for (int i = 0; i < dataGridViewTarifler.Rows.Count; i++)
+                        {
+                            dataGridViewTarifler.Rows[i].Cells["No"].Value = i + 1;
                         }
                     }
                 }

@@ -154,6 +154,7 @@
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.PeachPuff;
+            BackgroundImage = Properties.Resources.af32c285_45df_4497_995a_c54cc1976a93;
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(582, 553);
             Controls.Add(cmbBirim);

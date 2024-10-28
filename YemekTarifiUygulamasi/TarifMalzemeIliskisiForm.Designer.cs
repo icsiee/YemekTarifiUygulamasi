@@ -42,80 +42,92 @@
             // cmbMalzeme
             // 
             cmbMalzeme.FormattingEnabled = true;
-            cmbMalzeme.Location = new Point(191, 35);
+            cmbMalzeme.Location = new Point(433, 118);
             cmbMalzeme.Name = "cmbMalzeme";
-            cmbMalzeme.Size = new Size(151, 28);
+            cmbMalzeme.Size = new Size(166, 28);
             cmbMalzeme.TabIndex = 0;
             // 
             // txtMalzemeMiktar
             // 
-            txtMalzemeMiktar.Location = new Point(191, 109);
+            txtMalzemeMiktar.Location = new Point(433, 175);
             txtMalzemeMiktar.Name = "txtMalzemeMiktar";
-            txtMalzemeMiktar.Size = new Size(125, 27);
+            txtMalzemeMiktar.Size = new Size(166, 27);
             txtMalzemeMiktar.TabIndex = 1;
             // 
             // btnEkleMalzeme
             // 
-            btnEkleMalzeme.Location = new Point(517, 166);
+            btnEkleMalzeme.BackColor = Color.Red;
+            btnEkleMalzeme.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnEkleMalzeme.Location = new Point(424, 235);
             btnEkleMalzeme.Name = "btnEkleMalzeme";
-            btnEkleMalzeme.Size = new Size(94, 29);
+            btnEkleMalzeme.Size = new Size(234, 49);
             btnEkleMalzeme.TabIndex = 2;
-            btnEkleMalzeme.Text = "btnEkleMalzeme";
-            btnEkleMalzeme.UseVisualStyleBackColor = true;
+            btnEkleMalzeme.Text = " Ekle";
+            btnEkleMalzeme.UseVisualStyleBackColor = false;
             btnEkleMalzeme.Click += btnEkleMalzeme_Click_1;
             // 
             // btnKaydet
             // 
-            btnKaydet.Location = new Point(124, 270);
+            btnKaydet.BackColor = Color.Chartreuse;
+            btnKaydet.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnKaydet.Location = new Point(188, 285);
             btnKaydet.Name = "btnKaydet";
-            btnKaydet.Size = new Size(94, 29);
+            btnKaydet.Size = new Size(154, 49);
             btnKaydet.TabIndex = 3;
-            btnKaydet.Text = "btnKaydet";
-            btnKaydet.UseVisualStyleBackColor = true;
+            btnKaydet.Text = "Kaydet";
+            btnKaydet.UseVisualStyleBackColor = false;
             btnKaydet.Click += btnKaydet_Click_1;
             // 
             // dataGridViewMalzemeler
             // 
             dataGridViewMalzemeler.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewMalzemeler.Location = new Point(334, 211);
+            dataGridViewMalzemeler.Location = new Point(124, 357);
             dataGridViewMalzemeler.Name = "dataGridViewMalzemeler";
             dataGridViewMalzemeler.RowHeadersWidth = 51;
-            dataGridViewMalzemeler.Size = new Size(438, 227);
+            dataGridViewMalzemeler.Size = new Size(436, 188);
             dataGridViewMalzemeler.TabIndex = 4;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(72, 38);
+            label1.BackColor = Color.PeachPuff;
+            label1.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label1.Location = new Point(238, 118);
             label1.Name = "label1";
-            label1.Size = new Size(87, 20);
+            label1.Size = new Size(147, 29);
             label1.TabIndex = 5;
-            label1.Text = "Malzemeler";
+            label1.Text = "Malzemeler:";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(108, 116);
+            label2.BackColor = Color.PeachPuff;
+            label2.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            label2.Location = new Point(238, 175);
             label2.Name = "label2";
-            label2.Size = new Size(51, 20);
+            label2.Size = new Size(94, 29);
             label2.TabIndex = 6;
-            label2.Text = "Miktar";
+            label2.Text = "Miktar:";
             // 
             // btnYeniMalzemeEkle
             // 
-            btnYeniMalzemeEkle.Location = new Point(429, 70);
+            btnYeniMalzemeEkle.BackColor = Color.Red;
+            btnYeniMalzemeEkle.Font = new Font("Sitka Small", 12F, FontStyle.Bold, GraphicsUnit.Point, 162);
+            btnYeniMalzemeEkle.Location = new Point(424, 295);
             btnYeniMalzemeEkle.Name = "btnYeniMalzemeEkle";
-            btnYeniMalzemeEkle.Size = new Size(94, 29);
+            btnYeniMalzemeEkle.Size = new Size(234, 39);
             btnYeniMalzemeEkle.TabIndex = 7;
-            btnYeniMalzemeEkle.Text = "button1";
-            btnYeniMalzemeEkle.UseVisualStyleBackColor = true;
+            btnYeniMalzemeEkle.Text = "Yeni Malzeme Ekle";
+            btnYeniMalzemeEkle.UseVisualStyleBackColor = false;
             btnYeniMalzemeEkle.Click += btnYeniMalzemeEkle_Click;
             // 
             // TarifMalzemeIliskisiForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            BackgroundImage = Properties.Resources.af32c285_45df_4497_995a_c54cc1976a93;
+            BackgroundImageLayout = ImageLayout.Stretch;
+            ClientSize = new Size(782, 753);
             Controls.Add(btnYeniMalzemeEkle);
             Controls.Add(label2);
             Controls.Add(label1);

@@ -42,6 +42,8 @@
             btnAra = new Button();
             cmbFiltrele = new ComboBox();
             pictureBoxYenile = new PictureBox();
+            checkedListBoxMalzemeler = new CheckedListBox();
+            btnAra1 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewTarifler).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxYenile).BeginInit();
             SuspendLayout();
@@ -170,11 +172,31 @@
             pictureBoxYenile.TabStop = false;
             pictureBoxYenile.Click += pictureBoxYenile_Click;
             // 
+            // checkedListBoxMalzemeler
+            // 
+            checkedListBoxMalzemeler.FormattingEnabled = true;
+            checkedListBoxMalzemeler.Location = new Point(846, 196);
+            checkedListBoxMalzemeler.Name = "checkedListBoxMalzemeler";
+            checkedListBoxMalzemeler.Size = new Size(304, 356);
+            checkedListBoxMalzemeler.TabIndex = 5;
+            // 
+            // btnAra1
+            // 
+            btnAra1.Location = new Point(919, 118);
+            btnAra1.Name = "btnAra1";
+            btnAra1.Size = new Size(94, 29);
+            btnAra1.TabIndex = 6;
+            btnAra1.Text = "button1";
+            btnAra1.UseVisualStyleBackColor = true;
+            btnAra1.Click += btnAra1_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 625);
+            ClientSize = new Size(1188, 625);
+            Controls.Add(btnAra1);
+            Controls.Add(checkedListBoxMalzemeler);
             Controls.Add(pictureBoxYenile);
             Controls.Add(cmbFiltrele);
             Controls.Add(btnAra);
@@ -208,5 +230,7 @@
         private DataGridViewImageColumn tarifImageColumn;
         private DataGridViewTextBoxColumn eksikMaliyetColumn;
         private PictureBox pictureBoxYenile;
+        private CheckedListBox checkedListBoxMalzemeler;
+        private Button btnAra1;
     }
 }

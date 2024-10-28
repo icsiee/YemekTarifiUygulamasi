@@ -44,13 +44,18 @@
             pictureBoxYenile = new PictureBox();
             checkedListBoxMalzemeler = new CheckedListBox();
             btnAra1 = new Button();
+            minMalzemeSayisi = new NumericUpDown();
+            maxMalzemeSayisi = new NumericUpDown();
+            btnFiltrele = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridViewTarifler).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxYenile).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)minMalzemeSayisi).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)maxMalzemeSayisi).BeginInit();
             SuspendLayout();
             // 
             // btnMalzemeEkle
             // 
-            btnMalzemeEkle.Location = new Point(177, 120);
+            btnMalzemeEkle.Location = new Point(132, 118);
             btnMalzemeEkle.Name = "btnMalzemeEkle";
             btnMalzemeEkle.Size = new Size(94, 29);
             btnMalzemeEkle.TabIndex = 0;
@@ -60,7 +65,7 @@
             // 
             // btnTarifEkle
             // 
-            btnTarifEkle.Location = new Point(409, 120);
+            btnTarifEkle.Location = new Point(21, 118);
             btnTarifEkle.Name = "btnTarifEkle";
             btnTarifEkle.Size = new Size(94, 29);
             btnTarifEkle.TabIndex = 1;
@@ -156,7 +161,7 @@
             // 
             cmbFiltrele.FormattingEnabled = true;
             cmbFiltrele.Items.AddRange(new object[] { "Atıştırmalıklar", "Tatlılar", "İçecekler", "Sebze Yemekleri", "Kahvaltılıklar", "Ana Yemekler", "Tümü" });
-            cmbFiltrele.Location = new Point(310, 12);
+            cmbFiltrele.Location = new Point(145, 60);
             cmbFiltrele.Name = "cmbFiltrele";
             cmbFiltrele.Size = new Size(150, 28);
             cmbFiltrele.TabIndex = 2;
@@ -190,11 +195,38 @@
             btnAra1.UseVisualStyleBackColor = true;
             btnAra1.Click += btnAra1_Click;
             // 
+            // minMalzemeSayisi
+            // 
+            minMalzemeSayisi.Location = new Point(355, 39);
+            minMalzemeSayisi.Name = "minMalzemeSayisi";
+            minMalzemeSayisi.Size = new Size(150, 27);
+            minMalzemeSayisi.TabIndex = 7;
+            // 
+            // maxMalzemeSayisi
+            // 
+            maxMalzemeSayisi.Location = new Point(355, 83);
+            maxMalzemeSayisi.Name = "maxMalzemeSayisi";
+            maxMalzemeSayisi.Size = new Size(150, 27);
+            maxMalzemeSayisi.TabIndex = 8;
+            // 
+            // btnFiltrele
+            // 
+            btnFiltrele.Location = new Point(390, 128);
+            btnFiltrele.Name = "btnFiltrele";
+            btnFiltrele.Size = new Size(94, 29);
+            btnFiltrele.TabIndex = 9;
+            btnFiltrele.Text = "button1";
+            btnFiltrele.UseVisualStyleBackColor = true;
+            btnFiltrele.Click += btnFiltrele_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1188, 625);
+            Controls.Add(btnFiltrele);
+            Controls.Add(maxMalzemeSayisi);
+            Controls.Add(minMalzemeSayisi);
             Controls.Add(btnAra1);
             Controls.Add(checkedListBoxMalzemeler);
             Controls.Add(pictureBoxYenile);
@@ -210,6 +242,8 @@
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridViewTarifler).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxYenile).EndInit();
+            ((System.ComponentModel.ISupportInitialize)minMalzemeSayisi).EndInit();
+            ((System.ComponentModel.ISupportInitialize)maxMalzemeSayisi).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -232,5 +266,8 @@
         private PictureBox pictureBoxYenile;
         private CheckedListBox checkedListBoxMalzemeler;
         private Button btnAra1;
+        private NumericUpDown minMalzemeSayisi;
+        private NumericUpDown maxMalzemeSayisi;
+        private Button btnFiltrele;
     }
 }

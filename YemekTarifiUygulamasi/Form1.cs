@@ -75,6 +75,10 @@ namespace YemekTarifiUygulamasi
             detayButtonColumn.UseColumnTextForButtonValue = true; // Buton üzerinde yazý gözüksün
             dataGridViewTarifler.Columns.Add(detayButtonColumn);
 
+            minMalzemeSayisi.Minimum = 1;  // Minimum malzeme sayýsý
+            maxMalzemeSayisi.Minimum = 1;  // Minimum malzeme sayýsý
+
+
             // Event Handlers
             cmbFiltrele.SelectedIndexChanged += cmbFiltrele_SelectedIndexChanged;
             this.KeyPreview = true;
@@ -328,11 +332,18 @@ GROUP BY
 
         private void LoadTarifler(string aramaKriteri, string filtreKriteri)
         {
+
+            List<string> selectedMalzemeler = new List<string>();
+
+            foreach (var item in checkedListBoxMalzemeler.CheckedItems)
+            {
+                selectedMalzemeler.Add(item.ToString());
+            }
+
             string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234;";
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
-                try
-                {
+                
                     connection.Open();
                     string query = @"
                 SELECT 
@@ -372,6 +383,7 @@ GROUP BY
 
                     // DataGridView'i temizle
                     dataGridViewTarifler.Rows.Clear();
+                    List<TarifInfo> tarifList = new List<TarifInfo>();
 
                     int rowNumber = 1; // Numaralandýrma için sayaç
 
@@ -386,46 +398,70 @@ GROUP BY
                             decimal? eksikMaliyet = reader.IsDBNull("EksikMaliyet") ? null : reader.GetDecimal("EksikMaliyet");
                             string gorselAdi = reader.GetString("GorselAdi");
 
-                            // Resmi yükle
-                            Image tarifImage = null;
-                            string imagePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", gorselAdi);
-                            if (!string.IsNullOrEmpty(gorselAdi) && File.Exists(imagePath))
+                            double matchPercentage = CalculateMatchPercentage(tarifId, selectedMalzemeler);
+
+                            // Tarif bilgilerini listeye ekle
+                            tarifList.Add(new TarifInfo
                             {
-                                tarifImage = Image.FromFile(imagePath);
-                            }
+                                TarifID = tarifId,
+                                TarifAdi = tarifAdi,
+                                HazirlamaSuresi = hazirlamaSuresi,
+                                ToplamMaliyet = maliyet,
+                                EksikMaliyet = eksikMaliyet,
+                                GorselAdi = gorselAdi,
+                                MatchPercentage = matchPercentage
+                            });
 
-                            // Verileri DataGridView'e ekle
-                            int rowIndex = dataGridViewTarifler.Rows.Add(rowNumber, tarifImage, tarifId, tarifAdi, hazirlamaSuresi, maliyet);
+                            // Yüzde de?erine göre s?ralama
+                            var sortedTarifList = tarifList.OrderByDescending(t => t.MatchPercentage).ToList();
 
-                            // EksikMaliyet sütununa veri ekle
-                            var row = dataGridViewTarifler.Rows[rowIndex];
-                            row.Cells["EksikMaliyet"].Value = eksikMaliyet.HasValue ? eksikMaliyet.Value.ToString("C") : "Maliyet Yok";
+                            // Numaraland?rma için sayaç
 
-                            // Numaralandýrma sütununa deðer ekle
-                            row.Cells["No"].Value = rowNumber++; // Sýra numarasýný ekle
 
-                            // Tarifin durumuna göre renk ayarla
-                            if (eksikMaliyet.HasValue)
+                            foreach (var tarif in sortedTarifList)
                             {
-                                row.DefaultCellStyle.BackColor = Color.Red; // Eksik malzeme var
-                            }
-                            else
-                            {
-                                row.DefaultCellStyle.BackColor = Color.Green; // Tüm malzemeler yeterli
+                                // Resmi yükle
+                                Image tarifImage = null;
+                                string imagePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", tarif.GorselAdi);
+                                if (!string.IsNullOrEmpty(tarif.GorselAdi) && File.Exists(imagePath))
+                                {
+                                    tarifImage = Image.FromFile(imagePath);
+                                }
+
+                                // Yüzde de?erini formatla (virgülden sonra 3 basamak)
+                                string formattedPercentage = tarif.MatchPercentage.ToString("0.000");
+
+                                // Verileri DataGridView'e ekle
+                                int rowIndex = dataGridViewTarifler.Rows.Add(rowNumber, formattedPercentage, tarifImage, tarif.TarifID, tarif.TarifAdi, tarif.HazirlamaSuresi, tarif.ToplamMaliyet);
+
+                                // EksikMaliyet sütununa veri ekle
+                                var row = dataGridViewTarifler.Rows[rowIndex];
+                                row.Cells["EksikMaliyet"].Value = tarif.EksikMaliyet.HasValue ? tarif.EksikMaliyet.Value.ToString("C") : "Maliyet Yok";
+
+                                // Numaraland?rma sütununa de?er ekle
+                                row.Cells["No"].Value = rowNumber++; // S?ra numaras?n? ekle
+
+                                // Tarifin durumuna göre renk ayarla
+                                if (tarif.EksikMaliyet.HasValue)
+                                {
+                                    row.DefaultCellStyle.BackColor = Color.Red; // Eksik malzeme var
+                                }
+                                else
+                                {
+                                    row.DefaultCellStyle.BackColor = Color.Green; // Tüm malzemeler yeterli
+                                }
                             }
                         }
+
                     }
-                }
-                catch (MySqlException ex)
-                {
-                    MessageBox.Show("Veritabanýna baðlanýrken bir hata oluþtu: " + ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Hata: " + ex.Message);
-                }
-            }
-        }
+
+                
+
+               }
+         }
+            
+        
+
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -518,6 +554,152 @@ GROUP BY
 
         }
 
+
+        private void LoadTarifler(int minCount = 0, int maxCount = int.MaxValue)
+        {
+            List<string> selectedMalzemeler = new List<string>();
+
+            foreach (var item in checkedListBoxMalzemeler.CheckedItems)
+            {
+                selectedMalzemeler.Add(item.ToString());
+            }
+
+            string connectionString = "Server=localhost;Database=yemektarifidb;Uid=root;Pwd=1234";
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    string query = @"
+SELECT 
+    t.TarifID, 
+    t.TarifAdi, 
+    t.HazirlamaSuresi, 
+    SUM(m.BirimFiyat * tm.Malzememiktar) AS ToplamMaliyet, 
+    t.GorselAdi,
+    (SELECT SUM(m2.BirimFiyat * (tm2.Malzememiktar - m2.ToplamMiktar))
+     FROM malzemeler m2
+     JOIN tarifmalzemeiliskisi tm2 ON m2.MalzemeID = tm2.MalzemeID
+     WHERE tm2.TarifID = t.TarifID AND m2.ToplamMiktar < tm2.Malzememiktar) AS EksikMaliyet,
+    COUNT(tm.MalzemeID) AS MalzemeSayisi
+FROM 
+    tarifler t
+LEFT JOIN 
+    tarifmalzemeiliskisi tm ON t.TarifID = tm.TarifID
+LEFT JOIN 
+    malzemeler m ON tm.MalzemeID = m.MalzemeID
+GROUP BY 
+    t.TarifID, t.TarifAdi, t.HazirlamaSuresi, t.GorselAdi
+HAVING 
+    COUNT(tm.MalzemeID) BETWEEN @minCount AND @maxCount";
+
+                    MySqlCommand command = new MySqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@minCount", minCount);
+                    command.Parameters.AddWithValue("@maxCount", maxCount);
+
+                    dataGridViewTarifler.Rows.Clear();
+                    List<TarifInfo> tarifList = new List<TarifInfo>();
+
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                long tarifId = reader.GetInt64("TarifID");
+                                string tarifAdi = reader.GetString("TarifAdi");
+                                int hazirlamaSuresi = reader.GetInt32("HazirlamaSuresi");
+                                decimal maliyet = reader.IsDBNull(reader.GetOrdinal("ToplamMaliyet")) ? 0 : reader.GetDecimal(reader.GetOrdinal("ToplamMaliyet"));
+                                decimal? eksikMaliyet = reader.IsDBNull("EksikMaliyet") ? null : reader.GetDecimal("EksikMaliyet");
+                                string gorselAdi = reader.GetString("GorselAdi");
+
+                                double matchPercentage = CalculateMatchPercentage(tarifId, selectedMalzemeler);
+
+                                // Tarif bilgilerini listeye ekle
+                                tarifList.Add(new TarifInfo
+                                {
+                                    TarifID = tarifId,
+                                    TarifAdi = tarifAdi,
+                                    HazirlamaSuresi = hazirlamaSuresi,
+                                    ToplamMaliyet = maliyet,
+                                    EksikMaliyet = eksikMaliyet,
+                                    GorselAdi = gorselAdi,
+                                    MatchPercentage = matchPercentage
+                                });
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Sat?r i?leme hatas?: " + ex.Message);
+                            }
+                        }
+                    }
+
+                    // Yüzde de?erine göre s?ralama
+                    var sortedTarifList = tarifList.OrderByDescending(t => t.MatchPercentage).ToList();
+
+                    int rowNumber = 1; // Numaraland?rma için sayaç
+
+                    foreach (var tarif in sortedTarifList)
+                    {
+                        // Resmi yükle
+                        Image tarifImage = null;
+                        string imagePath = Path.Combine(@"C:\Users\iclal dere\source\YemekTarifiUygulamasi\YemekTarifiUygulamasi\Resources", tarif.GorselAdi);
+                        if (!string.IsNullOrEmpty(tarif.GorselAdi) && File.Exists(imagePath))
+                        {
+                            tarifImage = Image.FromFile(imagePath);
+                        }
+
+                        // Yüzde de?erini formatla (virgülden sonra 3 basamak)
+                        string formattedPercentage = tarif.MatchPercentage.ToString("0.000");
+
+                        // Verileri DataGridView'e ekle
+                        int rowIndex = dataGridViewTarifler.Rows.Add(rowNumber, formattedPercentage, tarifImage, tarif.TarifID, tarif.TarifAdi, tarif.HazirlamaSuresi, tarif.ToplamMaliyet);
+
+                        // EksikMaliyet sütununa veri ekle
+                        var row = dataGridViewTarifler.Rows[rowIndex];
+                        row.Cells["EksikMaliyet"].Value = tarif.EksikMaliyet.HasValue ? tarif.EksikMaliyet.Value.ToString("C") : "Maliyet Yok";
+
+                        // Numaraland?rma sütununa de?er ekle
+                        row.Cells["No"].Value = rowNumber++; // S?ra numaras?n? ekle
+
+                        // Tarifin durumuna göre renk ayarla
+                        if (tarif.EksikMaliyet.HasValue)
+                        {
+                            row.DefaultCellStyle.BackColor = Color.Red; // Eksik malzeme var
+                        }
+                        else
+                        {
+                            row.DefaultCellStyle.BackColor = Color.Green; // Tüm malzemeler yeterli
+                        }
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    MessageBox.Show("Veritaban?na ba?lan?rken bir hata olu?tu: " + ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Beklenmeyen hata: " + ex.Message);
+                }
+            }
+        }
+
+        private void btnFiltrele_Click(object sender, EventArgs e)
+{
+    int minCount = (int)minMalzemeSayisi.Value; // Minimum malzeme sayýsý
+    int maxCount = (int)maxMalzemeSayisi.Value; // Maksimum malzeme sayýsý
+
+    // Giriþ kontrolü: minCount maksimumdan büyükse veya maxCount minimumdan küçükse hata mesajý göster
+    if (minCount > maxCount)
+    {
+        MessageBox.Show("Hata: Minimum malzeme sayýsý, maksimumdan büyük olamaz.", "Hatalý Giriþ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        return; // Hata durumunda iþlemi sonlandýr
+    }
+
+    // Eðer deðerler uygunsa tarifleri yükle
+    LoadTarifler(minCount, maxCount); 
+}
 
     }
 }
